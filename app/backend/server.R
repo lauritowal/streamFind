@@ -1,5 +1,7 @@
 
 library(tools)
+library(jsonlite)
+library(streamFind)
 
 # DEMO TODOS:
 # TODO: Save stuff in sessions --> add to cache.
@@ -54,10 +56,17 @@ function(req) {
 
 
 #* MsData for a given file
-#* @get /msdata
-function() {
-  files <- streamFindData::msFilePaths()[1:3]
-  ms <- streamFind::MassSpecData$new(files)
-  # names = ms$get_analysis_names()
-  return(unclass(files))
+#* @post /msdata
+function(req) {
+  fileArray <- req$postBody
+  fileNames <- fromJSON(fileArray)
+  folderPath <- "/Users/ammar/Desktop/streamFind/app/backend/sample mzml"
+  filesInFolder <- list.files(folderPath, full.names = TRUE)
+  matchingFiles <- file.path(folderPath, fileNames)
+  matchingFiles <- matchingFiles[matchingFiles %in% filesInFolder]
+  print(matchingFiles)
+  ms <- streamFind::MassSpecData$new(files=matchingFiles)
+  overview = ms$get_overview()
+  return(overview)
 }
+

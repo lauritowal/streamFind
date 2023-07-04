@@ -26,6 +26,9 @@ const SelectMzml = ({ onFolderSelect }) => {
   const handleSendFiles = () => {
     onFolderSelect(selectedFiles);
   };
+  const handleDiscard = () => {
+    setSelectedFiles([]);
+  };
 
   const handleFolderClick = (item) => {
     if (item.endsWith(".mzML")) {
@@ -103,9 +106,16 @@ const SelectMzml = ({ onFolderSelect }) => {
         </li>
       ))}
       {selectedFiles}
-      {selectedFiles.length > 0 && (
-        <Button onClick={handleSendFiles}>Confirm Selected</Button>
-      )}
+      <div style={{ position: "absolute", top: 525 }}>
+        {selectedFiles.length > 0 && (
+          <Button onClick={handleSendFiles}>Select</Button>
+        )}
+      </div>
+      <div style={{ position: "absolute", top: 525, left: 150 }}>
+        {selectedFiles.length > 0 && (
+          <Button onClick={handleDiscard}>Discard Selection</Button>
+        )}
+      </div>
     </div>
   );
 };

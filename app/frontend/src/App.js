@@ -1,169 +1,122 @@
-import React, { useState } from "react";
-import "./App.css";
-import Diagram, { createSchema, useSchema } from "beautiful-react-diagrams";
-import FolderIcon from "@mui/icons-material/Folder";
-import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
-import QueryStatsIcon from "@mui/icons-material/QueryStats";
-import Grid from "@mui/material/Unstable_Grid2";
-import MenuIcon from "@mui/icons-material/Menu";
-import MsData from "./Components/MsData";
-import MsAnalysis from "./Components/MsAnalysis";
-import MsProcessing from "./Components/MsProcessing";
-import { v4 as uuidv4 } from "uuid";
+import React, { useState, useRef, useCallback, useEffect } from "react";
+import ReactFlow, {
+  Background,
+  ReactFlowProvider,
+  addEdge,
+  useNodesState,
+  useEdgesState,
+  Controls,
+} from "reactflow";
+import "reactflow/dist/style.css";
+import "./index.css";
+import Sidebar from "./Components/Sidebar";
+import MsData from "./Components/NodeTypes/MsData";
+import MsAnalysis from "./Components/NodeTypes/MsAnalysis";
+import MsProcessing from "./Components/NodeTypes/MsProcessing";
 
-const initialSchema = createSchema({
-  nodes: [],
-});
+const initialNodes = [];
+const nodeTypes = {
+  MsDataNode: MsData,
+  MsAnalysisNode: MsAnalysis,
+  MsProcessingNode: MsProcessing,
+};
 
-const App = () => {
-  // create diagrams schema
-  const [schema, { onChange, addNode, removeNode }] = useSchema(initialSchema);
+let id = 0;
+const getId = (type) => `${type}${id++}`;
 
-  const deleteNodeFromSchema = (id) => {
-    const nodeToRemove = schema.nodes.find((node) => node.id === id);
-    removeNode(nodeToRemove);
-  };
+const Canvas = () => {
+  const reactFlowWrapper = useRef(null);
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [reactFlowInstance, setReactFlowInstance] = useState(null);
+  const [inputFiles, setInputFiles] = useState([]);
 
-  const addMsData = (e) => {
-    const coordinates =
-      schema.nodes.length > 0
-        ? [
-            schema.nodes[schema.nodes.length - 1].coordinates[0] + 100,
-            schema.nodes[schema.nodes.length - 1].coordinates[1],
-          ]
-        : [150, 60];
+  const onConnect = useCallback(
+    (params) => {
+      const newEdge = addEdge(params, edges);
+      setEdges(newEdge);
+      // Update the data property of the source node
+      const sourceNode = nodes.find((node) => node.id === params.source);
+      if (sourceNode) {
+        const updatedSourceNode = {
+          ...sourceNode,
+          data: {
+            ...sourceNode.data,
+            edges: [...sourceNode.data.edges, params],
+          },
+        };
+        setNodes((nodes) =>
+          nodes.map((node) =>
+            node.id === params.source ? updatedSourceNode : node
+          )
+        );
+      }
+    },
+    [edges, nodes]
+  );
 
-    const nextNode = {
-      id: `nodeMsData-${uuidv4()}`,
-      content: `NodeMsData ${schema.nodes.length + 1}`,
-      coordinates,
-      render: MsData,
-      data: { onClick: deleteNodeFromSchema },
-      outputs: [
-        { id: `portMsAnalysisplay-${Math.random()}` },
-        { id: `portMsAnalysisgreen-${Math.random()}` },
-        { id: `portMsAnalysisblue-${Math.random()}` },
-      ],
-    };
+  const onDragOver = useCallback((event) => {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = "move";
+  }, []);
 
-    // Create a new schema object by copying the existing nodes and adding the new node
-    const newSchema = {
-      ...schema,
-      nodes: [...schema.nodes, nextNode],
-    };
+  console.log(nodes);
 
-    console.log(e);
-    onChange(newSchema); // Update the schema state with the new schema object
-  };
+  const onDrop = useCallback(
+    (event) => {
+      event.preventDefault();
 
-  const addMsProcessing = () => {
-    const coordinates =
-      schema.nodes.length > 0
-        ? [
-            schema.nodes[schema.nodes.length - 1].coordinates[0] + 100,
-            schema.nodes[schema.nodes.length - 1].coordinates[1],
-          ]
-        : [150, 60];
+      const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
+      const type = event.dataTransfer.getData("application/reactflow");
 
-    const nextNode = {
-      id: `nodeMsProcessing-${uuidv4()}`,
-      content: `NodeMsProcessing ${schema.nodes.length + 1}`,
-      coordinates,
-      render: MsProcessing,
-      data: { onClick: deleteNodeFromSchema },
-      inputs: [
-        { id: `portMsPreProcessingout-${Math.random()}` },
-        { id: `portMsPreProcessingin-${Math.random()}` },
-      ],
-    };
+      // check if the dropped element is valid
+      if (typeof type === "undefined" || !type) {
+        return;
+      }
 
-    // Create a new schema object by copying the existing nodes and adding the new node
-    const newSchema = {
-      ...schema,
-      nodes: [...schema.nodes, nextNode],
-    };
-
-    console.log(nextNode);
-    onChange(newSchema); // Update the schema state with the new schema object
-  };
-
-  const addMsAnalysis = () => {
-    const coordinates =
-      schema.nodes.length > 0
-        ? [
-            schema.nodes[schema.nodes.length - 1].coordinates[0] + 100,
-            schema.nodes[schema.nodes.length - 1].coordinates[1],
-          ]
-        : [150, 60];
-
-    const nextNode = {
-      id: `nodeMsAnalysis-${uuidv4()}`,
-      content: `NodeMsAnalysis ${schema.nodes.length + 1}`,
-      coordinates,
-      render: MsAnalysis,
-      data: { onClick: deleteNodeFromSchema },
-      inputs: [{ id: `portMsData-${Math.random()}` }],
-    };
-
-    // Create a new schema object by copying the existing nodes and adding the new node
-    const newSchema = {
-      ...schema,
-      nodes: [...schema.nodes, nextNode],
-    };
-
-    console.log(nextNode);
-    onChange(newSchema); // Update the schema state with the new schema object
-  };
+      const position = reactFlowInstance.project({
+        x: event.clientX - reactFlowBounds.left,
+        y: event.clientY - reactFlowBounds.top,
+      });
+      const newNode = {
+        id: getId(type),
+        type: type,
+        position,
+        data: {
+          label: `${type}`,
+          edges: [],
+          inputFiles: [],
+          setNodes: setNodes,
+        },
+      };
+      setNodes((nds) => nds.concat(newNode));
+    },
+    [reactFlowInstance]
+  );
 
   return (
-    <div>
-      <Grid container spacing={2}>
-        <Grid xs={12}>
-          <Diagram
-            schema={schema}
-            onChange={onChange}
-            style={{
-              height: "40rem",
-              border: "1px solid black",
-            }}
-          />
-        </Grid>
-        <div className="demo_box">
-          <div className="upper_div">
-            <MenuIcon></MenuIcon>
-            <h4>Objects</h4>
-          </div>
-          <FolderIcon
-            style={{ fontSize: "6em", color: "orange", cursor: "pointer" }}
-            onClick={addMsData}
-          ></FolderIcon>
-          <h4>MsData</h4>
+    <div className="dndflow">
+      <ReactFlowProvider>
+        <Background />
+        <div className="reactflow-wrapper" ref={reactFlowWrapper}>
+          <ReactFlow
+            nodes={nodes}
+            nodeTypes={nodeTypes}
+            edges={edges}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            onConnect={onConnect}
+            onInit={setReactFlowInstance}
+            onDrop={onDrop}
+            onDragOver={onDragOver}
+            fitView
+          ></ReactFlow>
         </div>
-        <div className="demo_box">
-          <div className="upper_div">
-            <MenuIcon></MenuIcon>
-            <h4>Input</h4>
-          </div>
-          <InsertDriveFileIcon
-            style={{ fontSize: "6em", color: "green", cursor: "pointer" }}
-            onClick={addMsAnalysis}
-          ></InsertDriveFileIcon>
-          <h4>MsAnalysis</h4>
-        </div>
-        <div className="demo_box">
-          <div className="upper_div">
-            <MenuIcon></MenuIcon>
-            <h4>MS-Pre Processing</h4>
-          </div>
-          <QueryStatsIcon
-            style={{ fontSize: "6em", cursor: "pointer" }}
-            onClick={addMsProcessing}
-          ></QueryStatsIcon>
-          <h4>FindFeatures</h4>
-        </div>
-      </Grid>
+        <Controls position="bottom-right" />
+      </ReactFlowProvider>
+      <Sidebar />
     </div>
   );
 };
 
-export default App;
+export default Canvas;
