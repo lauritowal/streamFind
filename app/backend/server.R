@@ -2,6 +2,7 @@
 library(tools)
 library(jsonlite)
 library(streamFind)
+library(plotly)
 
 # DEMO TODOS:
 # TODO: Save stuff in sessions --> add to cache.
@@ -15,13 +16,15 @@ cors <- function(req, res) {
   if (req$REQUEST_METHOD == "OPTIONS") {
     res$setHeader("Access-Control-Allow-Methods","*")
     res$setHeader("Access-Control-Allow-Headers", req$HTTP_ACCESS_CONTROL_REQUEST_HEADERS)
+    res$setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE")
+    res$setHeader("Access-Control-Allow-Headers", "Content-Type")
     res$status <- 200
     return(list())
   } else {
     plumber::forward()
   }
-
 }
+
 
 #* Echo back the input
 #* @get /files
@@ -66,7 +69,32 @@ function(req) {
   matchingFiles <- matchingFiles[matchingFiles %in% filesInFolder]
   print(matchingFiles)
   ms <- streamFind::MassSpecData$new(files=matchingFiles)
-  overview = ms$get_overview()
-  return(overview)
+  analyses <- ms$get_analyses()
+  analysesjson<-jsonlite::serializeJSON(analyses)
+  overview <- ms$get_overview()
+  analyses_number <- ms$get_number_analyses()
+  plot <- ms$plot_tic()
+  plotjson <- plotly_json(plot, jsonedit=FALSE, pretty=TRUE)
+  print(plotjson)
+  result <- list(
+    overview = overview,
+    analyses_number = analyses_number,
+    analysesjson=analysesjson,
+    plotjson=plotjson
+  )
+  return(result)
+}
+
+#* Apply get_analysis on MassSpecData object
+#* @post /getanalysis
+get_analysis <- function(ms) {
+  overview <- ms$get_overview()
+  analyses <- ms$get_analyses()
+  analyses_number <- ms$get_number_analyses()
+  plot <- ms$plot_tic()
+  result <- list(
+    overview = overview,
+    analyses_number = analyses_number
+  )
 }
 

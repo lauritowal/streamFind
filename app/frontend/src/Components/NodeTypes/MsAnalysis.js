@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Handle, Position } from "reactflow";
+import ReactFlow, { Handle, Position, useNodesState } from "reactflow";
 import InsertDriveIcon from "@mui/icons-material/InsertDriveFile";
 import SettingsIcon from "@mui/icons-material/Settings";
 import Modal from "@mui/material/Modal";
@@ -9,6 +9,7 @@ import Button from "@mui/material/Button";
 import SelectMzml from "../SelectMzml";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
+import Plot from "react-plotly.js";
 
 const handleStyle = { left: 10 };
 
@@ -38,8 +39,8 @@ const MsAnalysis = ({
     left: "50%",
     transform: "translate(-50%, -50%)",
     width: 500,
-    height: 500,
-    bgcolor: "#c1eff9",
+    height: 600,
+    bgcolor: "white",
     border: "2px solid white",
     borderRadius: "25px",
     p: 5,
@@ -51,7 +52,7 @@ const MsAnalysis = ({
     transform: "translate(-50%, -50%)",
     width: 300,
     height: 150,
-    bgcolor: "#c1eff9",
+    bgcolor: "white",
     border: "2px solid white",
     borderRadius: "25px",
     p: 5,
@@ -170,7 +171,7 @@ const MsAnalysis = ({
               </div>
             )}
             {selectedFiles && (
-              <div style={{ position: "absolute", top: 350, right: -40 }}>
+              <div style={{ position: "absolute", top: 399, right: -40 }}>
                 <Button onClick={handleOpen}>Confirm</Button>
               </div>
             )}

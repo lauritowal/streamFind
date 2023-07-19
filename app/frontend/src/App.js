@@ -5,6 +5,7 @@ import ReactFlow, {
   addEdge,
   useNodesState,
   useEdgesState,
+  useReactFlow,
   Controls,
 } from "reactflow";
 import "reactflow/dist/style.css";
@@ -13,8 +14,10 @@ import Sidebar from "./Components/Sidebar";
 import MsData from "./Components/NodeTypes/MsData";
 import MsAnalysis from "./Components/NodeTypes/MsAnalysis";
 import MsProcessing from "./Components/NodeTypes/MsProcessing";
+import { Button } from "@mui/material";
 
 const initialNodes = [];
+const flowKey = "example-flow";
 const nodeTypes = {
   MsDataNode: MsData,
   MsAnalysisNode: MsAnalysis,
@@ -24,12 +27,13 @@ const nodeTypes = {
 let id = 0;
 const getId = (type) => `${type}${id++}`;
 
-const Canvas = () => {
+const App = () => {
   const reactFlowWrapper = useRef(null);
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
   const [inputFiles, setInputFiles] = useState([]);
+  const { setViewport } = useReactFlow();
 
   const onConnect = useCallback(
     (params) => {
@@ -69,7 +73,6 @@ const Canvas = () => {
       const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
       const type = event.dataTransfer.getData("application/reactflow");
 
-      // check if the dropped element is valid
       if (typeof type === "undefined" || !type) {
         return;
       }
@@ -94,6 +97,29 @@ const Canvas = () => {
     [reactFlowInstance]
   );
 
+  const onSave = useCallback(() => {
+    if (reactFlowInstance) {
+      const flow = reactFlowInstance.toObject();
+      console.log(flow);
+      localStorage.setItem(flowKey, JSON.stringify(flow));
+    }
+  }, [reactFlowInstance]);
+
+  const onRestore = useCallback(() => {
+    const restoreFlow = async () => {
+      const flow = JSON.parse(localStorage.getItem(flowKey));
+      console.log(flow);
+      if (flow) {
+        const { x = 0, y = 0, zoom = 1 } = flow.viewport;
+        setNodes(flow.nodes || []);
+        setEdges(flow.edges || []);
+        setViewport({ x, y, zoom });
+      }
+    };
+
+    restoreFlow();
+  }, [setNodes, setViewport]);
+
   return (
     <div className="dndflow">
       <ReactFlowProvider>
@@ -112,11 +138,18 @@ const Canvas = () => {
             fitView
           ></ReactFlow>
         </div>
-        <Controls position="bottom-right" />
+        <Controls position="bottom-right">
+          <Button onClick={onSave}>save</Button>
+          <Button onClick={onRestore}>restore</Button>
+        </Controls>
       </ReactFlowProvider>
       <Sidebar />
     </div>
   );
 };
 
-export default Canvas;
+export default () => (
+  <ReactFlowProvider>
+    <App />
+  </ReactFlowProvider>
+);

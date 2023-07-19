@@ -11,6 +11,8 @@ import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import "../../index.css";
+import Plot from "react-plotly.js";
+import { colors } from "@mui/material";
 
 const handleStyle = { left: 10 };
 
@@ -23,7 +25,10 @@ function MsData({ data: { inputFiles, edges }, isConnectable, id }) {
   console.log(edges);
   const [stepName, setStepName] = useState("");
   const [openModal, setOpenModal] = useState(false);
-  const [data, setData] = useState([]);
+  const [overview, setOverview] = useState([]);
+  const [analyses_number, setAnalyses_number] = useState([]);
+  const [analyses, setAnalyses] = useState([]);
+  const [plot, setPlot] = useState([]);
 
   const handleOpen = () => {
     setOpenModal(true);
@@ -40,7 +45,7 @@ function MsData({ data: { inputFiles, edges }, isConnectable, id }) {
     transform: "translate(-50%, -50%)",
     width: 1500,
     height: 700,
-    bgcolor: "#c1eff9",
+    bgcolor: "white",
     border: "2px solid white",
     borderRadius: "25px",
     p: 5,
@@ -51,9 +56,16 @@ function MsData({ data: { inputFiles, edges }, isConnectable, id }) {
       .post("http://127.0.0.1:8000/msdata", inputFiles)
       .then((response) => {
         // Handle success response
-        console.log("Files sent successfully!", response.data);
+        console.log("Files sent successfully!", response);
         setOpenModal(true);
-        setData(response.data);
+        setOverview(response.data.overview);
+        const parsedAnalysesData = JSON.parse(response.data.analysesjson);
+        setAnalyses(parsedAnalysesData);
+        console.log(response.data.analysesjson);
+        console.log(analyses);
+        setAnalyses_number(response.data.analyses_number);
+        const parsedPlotData = JSON.parse(response.data.plotjson);
+        setPlot(parsedPlotData);
       })
       .catch((error) => {
         // Handle error
@@ -73,7 +85,11 @@ function MsData({ data: { inputFiles, edges }, isConnectable, id }) {
           left: 40,
         }}
       >
-        <SettingsIcon fontSize="1" />
+        <SettingsIcon
+          onClick={sendFiles}
+          style={{ cursor: "pointer" }}
+          fontSize="1"
+        />
       </div>
       <Handle
         type="source"
@@ -112,14 +128,12 @@ function MsData({ data: { inputFiles, edges }, isConnectable, id }) {
         </p>
         {edges.length > 0 && (
           <PlayIcon
-            onClick={sendFiles}
             style={{
               color: inputFiles.length > 0 ? "green" : "red",
               fontSize: "10px",
               position: "absolute",
               top: -2,
               left: -2,
-              cursor: "pointer",
             }}
           />
         )}
@@ -157,7 +171,7 @@ function MsData({ data: { inputFiles, edges }, isConnectable, id }) {
               </tr>
             </thead>
             <tbody>
-              {data.map((item) => (
+              {overview.map((item) => (
                 <tr key={item.id}>
                   <td>{item.file}</td>
                   <td>{item.analysis}</td>
@@ -169,6 +183,42 @@ function MsData({ data: { inputFiles, edges }, isConnectable, id }) {
               ))}
             </tbody>
           </table>
+          <Typography
+            style={{ position: "absolute", top: 40, left: 1150 }}
+            variant="h9"
+            component="h2"
+          >
+            Settings
+          </Typography>
+          <Typography
+            style={{ position: "absolute", top: 200, left: 1150 }}
+            variant="h9"
+            component="h2"
+          >
+            Summary
+            <div style={{ fontSize: "15px" }}>
+              <p>Number of Analyses: {analyses_number}</p>
+              <p>Number of Metadata: which function?</p>
+              <p>Spectra loaded: which function?</p>
+              <p>Chromatograms loaded: which function?</p>
+              <p>Total number of Peaks: which function?</p>
+              <p>Number of features: {overview.map((item) => item.features)}</p>
+            </div>
+          </Typography>
+          <Plot
+            style={{ position: "absolute", top: 300, left: 100 }}
+            data={plot.data}
+            layout={plot.layout}
+          />
+          <Button
+            variant="outlined"
+            size="large"
+            color="primary"
+            style={{ position: "absolute", top: 700, left: 1300 }}
+            onClick={handleClose}
+          >
+            Save msData
+          </Button>
         </Box>
       </Modal>
     </div>
