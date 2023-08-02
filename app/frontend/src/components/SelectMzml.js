@@ -33,11 +33,9 @@ const SelectMzml = ({ onFolderSelect }) => {
 
   const handleFolderClick = (item) => {
     if (item.endsWith(".mzML")) {
-      // Clicked item is a ".mzML" file
-      const fileName = item.split("/").pop(); // Extract the file name
+      const fileName = item.split("/").pop();
       setSelectedFiles((prevSelectedFiles) => [...prevSelectedFiles, fileName]);
     } else {
-      // Clicked item is a folder
       setSelectedFolder(selectedFolder + "/" + item);
       axios
         .post("http://127.0.0.1:8000/open_folder", {
@@ -63,13 +61,10 @@ const SelectMzml = ({ onFolderSelect }) => {
         name: prevFolder,
       })
       .then((response) => {
-        console.log(response); // Log the full response object for debugging
-        console.log(response.data); // Array of file names within the folder
         setFolders(response.data);
       })
       .catch((error) => {
         console.log(error);
-        // Handle errors if needed
       });
   };
 

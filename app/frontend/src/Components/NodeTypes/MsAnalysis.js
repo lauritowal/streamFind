@@ -9,7 +9,7 @@ import Button from "@mui/material/Button";
 import SelectMzml from "../SelectMzml";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import Plot from "react-plotly.js";
+import MsData from "./MsData";
 
 const handleStyle = { left: 10 };
 
@@ -63,32 +63,26 @@ const MsAnalysis = ({
   };
 
   useEffect(() => {
-    setNodes((nds) =>
-      nds.map((node) => {
-        if (node.id === id) {
-          return {
-            ...node,
-            data: {
-              ...node.data,
-              inputFiles: selectedFiles,
-            },
-          };
-        } else if (edges.some((edge) => edge.target === node.id)) {
-          return {
-            ...node,
-            data: {
-              ...node.data,
-              edges: "MsAnalysis attached",
-              inputFiles: selectedFiles,
-            },
-          };
-        }
-        return node;
-      })
-    );
+    if (setNodes) {
+      setNodes((nds) =>
+        nds.map((node) => {
+          if (edges.some((edge) => node.id === edge.target)) {
+            return {
+              ...node,
+              data: {
+                ...node.data,
+                inputFiles: selectedFiles,
+              },
+            };
+          }
+          return node;
+        })
+      );
+    }
   }, [selectedFiles, inputFiles, edges, id, setNodes]);
 
   const openChild = () => {
+    setSelectedFiles("");
     setStepName("childOpen");
   };
 

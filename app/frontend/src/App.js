@@ -32,14 +32,12 @@ const App = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
-  const [inputFiles, setInputFiles] = useState([]);
   const { setViewport } = useReactFlow();
 
   const onConnect = useCallback(
     (params) => {
       const newEdge = addEdge(params, edges);
       setEdges(newEdge);
-      // Update the data property of the source node
       const sourceNode = nodes.find((node) => node.id === params.source);
       if (sourceNode) {
         const updatedSourceNode = {
@@ -52,6 +50,21 @@ const App = () => {
         setNodes((nodes) =>
           nodes.map((node) =>
             node.id === params.source ? updatedSourceNode : node
+          )
+        );
+      }
+      const targetNode = nodes.find((node) => node.id === params.target);
+      if (targetNode) {
+        const updatedTargetNode = {
+          ...targetNode,
+          data: {
+            ...targetNode.data,
+            edges: [...targetNode.data.edges, params],
+          },
+        };
+        setNodes((nodes) =>
+          nodes.map((node) =>
+            node.id === params.target ? updatedTargetNode : node
           )
         );
       }
@@ -89,6 +102,7 @@ const App = () => {
           label: `${type}`,
           edges: [],
           inputFiles: [],
+          processing: [],
           setNodes: setNodes,
         },
       };

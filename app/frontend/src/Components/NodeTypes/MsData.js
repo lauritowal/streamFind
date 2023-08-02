@@ -6,29 +6,30 @@ import PlayIcon from "@mui/icons-material/PlayCircle";
 import axios from "axios";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
+import "../../index.css";
+import MsDataDetails from "../MsDataDetails";
+import MsProcessing from "./MsProcessing";
 import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import "../../index.css";
-import Plot from "react-plotly.js";
-import { colors } from "@mui/material";
 
 const handleStyle = { left: 10 };
 
-function MsData({ data: { inputFiles, edges }, isConnectable, id }) {
+function MsData({
+  id,
+  data: { label, edges, processing, inputFiles, setNodes },
+  isConnectable,
+}) {
   const onChange = useCallback((evt) => {
     console.log(evt.target.value);
   }, []);
 
   console.log(inputFiles);
   console.log(edges);
-  const [stepName, setStepName] = useState("");
   const [openModal, setOpenModal] = useState(false);
-  const [overview, setOverview] = useState([]);
-  const [analyses_number, setAnalyses_number] = useState([]);
-  const [analyses, setAnalyses] = useState([]);
-  const [plot, setPlot] = useState([]);
+  const [openObj, setOpenObj] = useState(false);
+  const [msDataObj, setMsDataObj] = useState([]);
 
   const handleOpen = () => {
     setOpenModal(true);
@@ -36,6 +37,7 @@ function MsData({ data: { inputFiles, edges }, isConnectable, id }) {
 
   const handleClose = () => {
     setOpenModal(false);
+    setOpenObj(false);
   };
 
   const style = {
@@ -50,28 +52,56 @@ function MsData({ data: { inputFiles, edges }, isConnectable, id }) {
     borderRadius: "25px",
     p: 5,
   };
+  const style2 = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 350,
+    height: 50,
+    bgcolor: "white",
+    border: "2px solid white",
+    borderRadius: "25px",
+    p: 5,
+  };
 
-  const sendFiles = () => {
+  const createMsDataObj = () => {
     axios
       .post("http://127.0.0.1:8000/msdata", inputFiles)
       .then((response) => {
-        // Handle success response
-        console.log("Files sent successfully!", response);
-        setOpenModal(true);
-        setOverview(response.data.overview);
-        const parsedAnalysesData = JSON.parse(response.data.analysesjson);
-        setAnalyses(parsedAnalysesData);
-        console.log(response.data.analysesjson);
-        console.log(analyses);
-        setAnalyses_number(response.data.analyses_number);
-        const parsedPlotData = JSON.parse(response.data.plotjson);
-        setPlot(parsedPlotData);
+        console.log("MsData Object created!", response);
+        setMsDataObj(response.data);
+        setOpenObj(true);
       })
       .catch((error) => {
-        // Handle error
         console.error("Error sending files:", error);
       });
   };
+
+  const showDetails = () => {
+    setOpenModal(true);
+    console.log("Details!");
+    console.log(msDataObj);
+  };
+
+  useEffect(() => {
+    if (setNodes) {
+      setNodes((nds) =>
+        nds.map((node) => {
+          if (edges.some((edge) => edge.target === node.id)) {
+            return {
+              ...node,
+              data: {
+                ...node.data,
+                processing: msDataObj,
+              },
+            };
+          }
+          return node;
+        })
+      );
+    }
+  }, [msDataObj, processing, edges, id, setNodes]);
 
   return (
     <div>
@@ -86,7 +116,7 @@ function MsData({ data: { inputFiles, edges }, isConnectable, id }) {
         }}
       >
         <SettingsIcon
-          onClick={sendFiles}
+          onClick={showDetails}
           style={{ cursor: "pointer" }}
           fontSize="1"
         />
@@ -128,8 +158,10 @@ function MsData({ data: { inputFiles, edges }, isConnectable, id }) {
         </p>
         {edges.length > 0 && (
           <PlayIcon
+            onClick={createMsDataObj}
             style={{
               color: inputFiles.length > 0 ? "green" : "red",
+              cursor: "pointer",
               fontSize: "10px",
               position: "absolute",
               top: -2,
@@ -139,15 +171,15 @@ function MsData({ data: { inputFiles, edges }, isConnectable, id }) {
         )}
       </Handle>
       <Modal
-        open={openModal}
+        open={openObj}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={style}>
+        <Box sx={style2}>
           <IconButton
-            aria-label="close"
             onClick={handleClose}
+            aria-label="close"
             sx={{
               position: "absolute",
               right: 8,
@@ -156,69 +188,22 @@ function MsData({ data: { inputFiles, edges }, isConnectable, id }) {
           >
             <CloseIcon />
           </IconButton>
-          <Typography id="modal-modal-title" variant="h9" component="h2">
-            Analysis Table
-          </Typography>
-          <table className="table-container">
-            <thead>
-              <tr>
-                <th>file</th>
-                <th>Analysis</th>
-                <th>Replicate</th>
-                <th>Blank</th>
-                <th>class</th>
-                <th>polarity</th>
-              </tr>
-            </thead>
-            <tbody>
-              {overview.map((item) => (
-                <tr key={item.id}>
-                  <td>{item.file}</td>
-                  <td>{item.analysis}</td>
-                  <td>{item.replicate}</td>
-                  <td>{item.blank}</td>
-                  <td>{item.type}</td>
-                  <td>{item.polarity}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <Typography
-            style={{ position: "absolute", top: 40, left: 1150 }}
-            variant="h9"
-            component="h2"
-          >
-            Settings
-          </Typography>
-          <Typography
-            style={{ position: "absolute", top: 200, left: 1150 }}
-            variant="h9"
-            component="h2"
-          >
-            Summary
-            <div style={{ fontSize: "15px" }}>
-              <p>Number of Analyses: {analyses_number}</p>
-              <p>Number of Metadata: which function?</p>
-              <p>Spectra loaded: which function?</p>
-              <p>Chromatograms loaded: which function?</p>
-              <p>Total number of Peaks: which function?</p>
-              <p>Number of features: {overview.map((item) => item.features)}</p>
-            </div>
-          </Typography>
-          <Plot
-            style={{ position: "absolute", top: 300, left: 100 }}
-            data={plot.data}
-            layout={plot.layout}
-          />
-          <Button
-            variant="outlined"
-            size="large"
-            color="primary"
-            style={{ position: "absolute", top: 700, left: 1300 }}
-            onClick={handleClose}
-          >
-            Save msData
-          </Button>
+          <div style={{ display: "flex" }}>
+            <CheckCircleIcon />
+            <Typography id="modal-modal-title" variant="h9" component="h2">
+              msData Object created!
+            </Typography>
+          </div>
+        </Box>
+      </Modal>
+      <Modal
+        open={openModal}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <MsDataDetails msDataObj={msDataObj} handleClose={handleClose} />
         </Box>
       </Modal>
     </div>

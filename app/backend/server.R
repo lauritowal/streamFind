@@ -1,5 +1,6 @@
 
 library(tools)
+library(plumber)
 library(jsonlite)
 library(streamFind)
 library(plotly)
@@ -26,21 +27,13 @@ cors <- function(req, res) {
 }
 
 
-#* Echo back the input
-#* @get /files
-function() {
-  # get files by ...
-  files <- streamFindData::msFilePaths()[1:3]
-  return(unclass(files))
-}
-
 #* @get /files_project
 function() {
-  filesx <- list.files(path = "/Users/ammar/Desktop/streamFind", pattern = "\\.mzML$", full.names = TRUE, recursive = FALSE)
-  folders<- list.dirs(path = "/Users/ammar/Desktop/streamFind", full.names = TRUE, recursive = FALSE)
-  file_names <- basename(filesx)
-  folder_names <- basename(folders)
-  filesandfolders<-c(file_names,folder_names)
+    filesx <- list.files(path = "/Users/ammar/Desktop/streamFind", pattern = "\\.mzML$", full.names = TRUE, recursive = FALSE)
+    folders <- list.dirs(path = "/Users/ammar/Desktop/streamFind", full.names = TRUE, recursive = FALSE)
+    file_names <- basename(filesx)
+    folder_names <- basename(folders)
+    filesandfolders <- c(file_names, folder_names)
   return(filesandfolders)
 }
 
@@ -50,12 +43,13 @@ function(req) {
   print(folder_name)
   folder_path <- paste0("/Users/ammar/Desktop/streamFind/", folder_name)
   filesx <- list.files(path = folder_path, pattern = "\\.mzML$", full.names = TRUE, recursive = FALSE)
-  folders<- list.dirs(path = folder_path, full.names = TRUE, recursive = FALSE)
+  folders <- list.dirs(path = folder_path, full.names = TRUE, recursive = FALSE)
   file_names <- basename(filesx)
   folder_names <- basename(folders)
-  filesandfolders<-c(file_names,folder_names)
+  filesandfolders <- c(file_names, folder_names)
   return(filesandfolders)
 }
+
 
 
 #* MsData for a given file
@@ -63,38 +57,73 @@ function(req) {
 function(req) {
   fileArray <- req$postBody
   fileNames <- fromJSON(fileArray)
+  cache_key <- paste(sort(fileNames), collapse = "_")
+  print(cache_key)
+  # Check if cached results exist for the given files
+  if (file.exists(paste0(cache_key, ".rds"))) {
+    # If cached results exist, load and return them
+    cached_result <- readRDS(paste0(cache_key, ".rds"))
+    print("loading from cache...")
+    return(cache_key)
+  } else {
   folderPath <- "/Users/ammar/Desktop/streamFind/app/backend/sample mzml"
   filesInFolder <- list.files(folderPath, full.names = TRUE)
   matchingFiles <- file.path(folderPath, fileNames)
   matchingFiles <- matchingFiles[matchingFiles %in% filesInFolder]
-  print(matchingFiles)
   ms <- streamFind::MassSpecData$new(files=matchingFiles)
-  analyses <- ms$get_analyses()
-  analysesjson<-jsonlite::serializeJSON(analyses)
-  overview <- ms$get_overview()
-  analyses_number <- ms$get_number_analyses()
-  plot <- ms$plot_tic()
-  plotjson <- plotly_json(plot, jsonedit=FALSE, pretty=TRUE)
-  print(plotjson)
-  result <- list(
-    overview = overview,
-    analyses_number = analyses_number,
-    analysesjson=analysesjson,
-    plotjson=plotjson
-  )
-  return(result)
+  msjson<-jsonlite::serializeJSON(ms)
+  saveRDS(ms, paste0(cache_key, ".rds"))
+  print("saving cache...")
+  return(cache_key)
+  }
 }
 
-#* Apply get_analysis on MassSpecData object
-#* @post /getanalysis
-get_analysis <- function(ms) {
-  overview <- ms$get_overview()
-  analyses <- ms$get_analyses()
-  analyses_number <- ms$get_number_analyses()
-  plot <- ms$plot_tic()
-  result <- list(
-    overview = overview,
-    analyses_number = analyses_number
-  )
-}
+#* Getting details for MsData
+#* @post /msdatadetails
+function(req) {
+  fileArray <- req$postBody
+  fileNames <- fromJSON(fileArray)
+  cache_key <- paste(sort(fileNames), collapse = "_")
+  if (file.exists(paste0(cache_key, ".rds"))) {
+    cached_result <- readRDS(paste0(cache_key, ".rds"))
+    analyses <- cached_result$get_analyses()
+    analysesjson <- jsonlite::serializeJSON(analyses)
+    overview <- cached_result$get_overview()
+    analyses_number <- cached_result$get_number_analyses()
+    plot <- cached_result$plot_tic()
+    plotjson <- plotly_json(plot, jsonedit = FALSE, pretty = TRUE)
+    result <- list(
+      overview = overview,
+      analyses_number = analyses_number,
+      analysesjson = analysesjson,
+      plotjson = plotjson
+    )
+    return(result)
+  } else {
+    result <- list(
+      error = "File not found!",
+    )
+ return(result)}}
+
+
+#* Applying get_features on MsData for a given file
+#* @post /get_features
+function(req) {
+  fileArray <- req$postBody
+  fileNames <- fromJSON(fileArray)
+  cache_key <- paste(sort(fileNames), collapse = "_")
+  if (file.exists(paste0(cache_key, ".rds"))) {
+    cached_result <- readRDS(paste0(cache_key, ".rds"))
+    features <- cached_result$get_features()
+    featuresjson <- jsonlite::serializeJSON(features)
+    result <- list(
+      featuresjson=featuresjson
+    )
+    print(result)
+    return(result)
+  } else {
+    result <- list(
+      error = "File not found!",
+    )
+    return(result)}}
 
