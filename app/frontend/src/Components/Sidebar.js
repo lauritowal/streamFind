@@ -49,12 +49,19 @@ export default () => {
           <h4>Ms Pre-Processing</h4>
         </div>
         <div
-          onDragStart={(event) => onDragStart(event, "MsProcessingNode")}
+          onDragStart={(event) => onDragStart(event, "FindFeaturesNode")}
           draggable
         >
           <QueryIcon style={{ fontSize: "6em", cursor: "pointer" }} />
         </div>
-        <h4>Find Features</h4>
+        <h4>find_features</h4>
+        <div
+          onDragStart={(event) => onDragStart(event, "GroupFeaturesNode")}
+          draggable
+        >
+          <QueryIcon style={{ fontSize: "6em", cursor: "pointer" }} />
+        </div>
+        <h4>group_features</h4>
       </div>
     </div>
   );

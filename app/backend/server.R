@@ -71,7 +71,6 @@ function(req) {
   matchingFiles <- file.path(folderPath, fileNames)
   matchingFiles <- matchingFiles[matchingFiles %in% filesInFolder]
   ms <- streamFind::MassSpecData$new(files=matchingFiles)
-  msjson<-jsonlite::serializeJSON(ms)
   saveRDS(ms, paste0(cache_key, ".rds"))
   print("saving cache...")
   return(cache_key)
@@ -106,24 +105,94 @@ function(req) {
  return(result)}}
 
 
-#* Applying get_features on MsData for a given file
-#* @post /get_features
+#* Applying find_features on MsData for a given file
+#* @post /find_features
+function(req) {
+  fileArray <- req$postBody
+  fileNames <- fromJSON(fileArray)
+  algorithm <- fileNames$algorithm
+  cache_key <- fileNames$fileNames
+  if (file.exists(paste0(cache_key, ".rds"))) {
+    cached_result <- readRDS(paste0(cache_key, ".rds"))
+    settings<-get_default_ProcessingSettings(
+      call = "find_features",
+      algorithm = algorithm
+    )
+    updated_cache<-cached_result$find_features(settings)
+    print("applying find features...")
+    saveRDS(updated_cache, paste0(cache_key, ".rds"))
+    print("updating cache...")
+    return(cache_key)
+  } else {
+    result <- list(
+      error = "File not found!",
+    )
+    return(result)}}
+
+#* Applying find_features on MsData with custom parameters
+#* @post /custom_find_features
+function(req) {
+  data <- req$postBody
+  datajson <- fromJSON(data)
+  params<-datajson$parameters
+  cache_key<-datajson$msData
+  print(cache_key)
+  browser()
+  settings <- list(
+    call = "find_features",
+    algorithm = "xcms3",
+    parameters = xcms::CentWaveParam(
+      ppm = as.numeric(params$ppm),
+      peakwidth = c(5, 40),
+      snthresh = as.numeric(params$snthresh),
+      prefilter = c(5, 1500),
+      mzCenterFun = as.character(params$mzCenterFun)),
+      integrate = as.numeric(params$integrate),
+      mzdiff = as.numeric(params$mzdiff),
+      fitgauss = as.character(params$fitgauss),
+      noise = as.numeric(params$noise,
+      verboseColumns = as.logical(params$verboseColumns),
+      roiList = list(),
+      firstBaselineCheck = as.logical(params$firstBaselineCheck),
+      roiScales = numeric(),
+      extendLengthMSW = as.logical(params$extendLengthMSW)
+    ))
+  print(settings)
+  if (file.exists(paste0(cache_key, ".rds"))) {
+    cached_result <- readRDS(paste0(cache_key, ".rds"))
+    updated_cache<-cached_result$find_features(settings)
+    print("applying find features...")
+    saveRDS(updated_cache, paste0(cache_key, ".rds"))
+    print("updating cache...")
+    return(cache_key)
+  } else {
+    result <- list(
+      error = "File not found!",
+    )
+return(result)}}
+
+
+#* Applying group_features on MsData for a given file
+#* @post /group_features
 function(req) {
   fileArray <- req$postBody
   fileNames <- fromJSON(fileArray)
   cache_key <- paste(sort(fileNames), collapse = "_")
   if (file.exists(paste0(cache_key, ".rds"))) {
     cached_result <- readRDS(paste0(cache_key, ".rds"))
-    features <- cached_result$get_features()
-    featuresjson <- jsonlite::serializeJSON(features)
-    result <- list(
-      featuresjson=featuresjson
+    gfs<-get_default_ProcessingSettings(
+      call = "group_features",
+      algorithm = "peakdensity"
     )
-    print(result)
-    return(result)
+    updated_cache<-cached_result$group_features(gfs)
+    print(updated_cache)
+    print("grouping features...")
+    saveRDS(updated_cache, paste0(cache_key, ".rds"))
+    print("updating cache...")
+    return(cache_key)
   } else {
     result <- list(
-      error = "File not found!",
+      error = "File not found!"
     )
     return(result)}}
 

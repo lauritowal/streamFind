@@ -11,25 +11,21 @@ import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ChangeParameters from "../ChangeParameters";
-import { Button } from "@mui/material";
 
 const handleStyle = { left: 10 };
 
-function MsProcessing({
+function GroupFeatures({
   type,
-  id,
-  data: { label, edges, find_features, group_features, setNodes },
+  data: { label, edges, group_features, setNodes },
   isConnectable,
 }) {
   const onChange = useCallback((evt) => {
     console.log(evt.target.value);
   }, []);
-  console.log(find_features);
+  console.log(group_features);
 
-  const [findFeatures, setFindFeatures] = useState([]);
-  const [algo, setAlgo] = useState("");
+  const [groupFeatures, setGroupFeatures] = useState([]);
   const [openObj, setOpenObj] = useState(false);
-  const [selectAlgo, setSelectAlgo] = useState(false);
   const [openModal, setOpenModal] = useState(false);
 
   const style = {
@@ -60,50 +56,22 @@ function MsProcessing({
   const handleClose = () => {
     setOpenModal(false);
     setOpenObj(false);
-    setSelectAlgo(false);
-  };
-
-  const openSelectAlgo = () => {
-    setSelectAlgo(true);
   };
 
   const getFeatures = () => {
-    const requestData = {
-      fileNames: find_features,
-      algorithm: algo,
-    };
     axios
-      .post("http://127.0.0.1:8000/find_features", requestData)
+      .post("http://127.0.0.1:8000/group_features", group_features)
       .then((response) => {
-        console.log("Getting features", response);
+        console.log("Getting group features", response);
         console.log(response.data);
-        setFindFeatures(response.data);
-        console.log(findFeatures);
+        setGroupFeatures(response.data);
+        console.log(groupFeatures);
         setOpenObj(true);
       })
       .catch((error) => {
         console.error("Error sending files:", error);
       });
   };
-
-  useEffect(() => {
-    if (setNodes) {
-      setNodes((nds) =>
-        nds.map((node) => {
-          if (edges.some((edge) => edge.target === node.id)) {
-            return {
-              ...node,
-              data: {
-                ...node.data,
-                group_features: findFeatures,
-              },
-            };
-          }
-          return node;
-        })
-      );
-    }
-  }, [findFeatures, group_features, edges, id, setNodes]);
 
   const changeParameters = () => {
     setOpenModal(true);
@@ -127,7 +95,7 @@ function MsProcessing({
         />
       </div>
       <p style={{ fontSize: "7px", position: "absolute", top: 45, left: -9 }}>
-        find_features
+        group_features
       </p>
       <Handle
         type="target"
@@ -141,9 +109,9 @@ function MsProcessing({
           in
         </p>
         <PlayIcon
-          onClick={openSelectAlgo}
+          onClick={getFeatures}
           style={{
-            color: find_features.length > 0 ? "green" : "red",
+            color: group_features.length > 0 ? "green" : "red",
             cursor: "pointer",
             fontSize: "10px",
             position: "absolute",
@@ -163,37 +131,6 @@ function MsProcessing({
           out
         </p>
       </Handle>
-      <Modal
-        open={selectAlgo}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          <IconButton
-            onClick={handleClose}
-            aria-label="close"
-            sx={{
-              position: "absolute",
-              right: 8,
-              top: 8,
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
-          <Typography id="modal-modal-title" variant="h9" component="h2">
-            Select Algorithm:
-          </Typography>
-          <select
-            value={algo}
-            onChange={(event) => setAlgo(event.target.value)}
-          >
-            <option value="">Select</option>
-            <option value="xcms3">xcms3</option>
-          </select>
-          <Button onClick={getFeatures}>Apply!</Button>
-        </Box>
-      </Modal>
       <Modal
         open={openObj}
         onClose={handleClose}
@@ -215,7 +152,7 @@ function MsProcessing({
           <div style={{ display: "flex" }}>
             <CheckCircleIcon />
             <Typography id="modal-modal-title" variant="h9" component="h2">
-              find_features applied with {algo}!
+              group_features applied!
             </Typography>
           </div>
         </Box>
@@ -227,14 +164,11 @@ function MsProcessing({
         aria-describedby="modal-modal-description"
       >
         <Box sx={style1}>
-          <ChangeParameters
-            find_features={findFeatures}
-            handleClose={handleClose}
-          />
+          <ChangeParameters handleClose={handleClose} />
         </Box>
       </Modal>
     </div>
   );
 }
 
-export default MsProcessing;
+export default GroupFeatures;

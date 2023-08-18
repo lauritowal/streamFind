@@ -18,7 +18,7 @@ const handleStyle = { left: 10 };
 
 function MsData({
   id,
-  data: { label, edges, processing, inputFiles, setNodes },
+  data: { label, edges, find_features, inputFiles, setNodes },
   isConnectable,
 }) {
   const onChange = useCallback((evt) => {
@@ -93,7 +93,7 @@ function MsData({
               ...node,
               data: {
                 ...node.data,
-                processing: msDataObj,
+                find_features: msDataObj,
               },
             };
           }
@@ -101,7 +101,7 @@ function MsData({
         })
       );
     }
-  }, [msDataObj, processing, edges, id, setNodes]);
+  }, [msDataObj, find_features, edges, id, setNodes]);
 
   return (
     <div>

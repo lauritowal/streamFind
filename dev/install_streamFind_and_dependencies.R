@@ -15,6 +15,7 @@ install.packages(c(
   "shiny",
   "golem",
   "RaMS",
+  "pandoc",
   "rJava",
   "igraph" #needed for annotation
 ))

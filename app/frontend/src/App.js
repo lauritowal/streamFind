@@ -15,13 +15,15 @@ import MsData from "./Components/NodeTypes/MsData";
 import MsAnalysis from "./Components/NodeTypes/MsAnalysis";
 import MsProcessing from "./Components/NodeTypes/MsProcessing";
 import { Button } from "@mui/material";
+import GroupFeatures from "./Components/NodeTypes/GroupFeatures";
 
 const initialNodes = [];
 const flowKey = "example-flow";
 const nodeTypes = {
   MsDataNode: MsData,
   MsAnalysisNode: MsAnalysis,
-  MsProcessingNode: MsProcessing,
+  FindFeaturesNode: MsProcessing,
+  GroupFeaturesNode: GroupFeatures,
 };
 
 let id = 0;
@@ -102,7 +104,8 @@ const App = () => {
           label: `${type}`,
           edges: [],
           inputFiles: [],
-          processing: [],
+          find_features: [],
+          group_features: [],
           setNodes: setNodes,
         },
       };

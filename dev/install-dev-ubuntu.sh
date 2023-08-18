@@ -14,6 +14,7 @@ sudo add-apt-repository -y "deb https://cloud.r-project.org/bin/linux/ubuntu $(l
 sudo apt install -y --no-install-recommends r-base
 # Get 5000+ CRAN Packages
 sudo add-apt-repository -y ppa:c2d4u.team/c2d4u4.0+
+#TODO: Install pandoc
 
 
 ## Install streamFind and dependencies ##

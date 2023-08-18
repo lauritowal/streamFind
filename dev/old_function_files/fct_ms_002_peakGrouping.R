@@ -67,9 +67,10 @@ peakGrouping <- function(object = NULL, settings = NULL) {
 
 
   if (algorithm == "xcms3") {
-      params$groupParam@sampleGroups <- replicateNames(object)
+    print("banana")
+      params@groupParam@sampleGroups <- replicateNames(object)
     if ("rtalign" %in% names(params)) if (params$rtalign) {
-      params$preGroupParam@sampleGroups <- replicateNames(object)
+      params@preGroupParam@sampleGroups <- replicateNames(object)
     }
   }
 
