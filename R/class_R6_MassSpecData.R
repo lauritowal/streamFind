@@ -4014,10 +4014,10 @@ MassSpecData <- R6::R6Class("MassSpecData",
       parameters <- settings$parameters
 
       if (algorithm == "xcms3") {
-        parameters$groupParam@sampleGroups <- self$get_replicate_names()
+        parameters@groupParam@sampleGroups <- self$get_replicate_names()
         if ("rtalign" %in% names(parameters)) {
           if (parameters$rtalign) {
-            parameters$preGroupParam@sampleGroups <- self$get_replicate_names()
+            parameters@preGroupParam@sampleGroups <- self$get_replicate_names()
           }
         }
       }

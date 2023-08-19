@@ -83,6 +83,7 @@ function MsProcessing({
       })
       .catch((error) => {
         console.error("Error sending files:", error);
+        console.log(requestData);
       });
   };
 

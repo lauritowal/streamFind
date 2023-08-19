@@ -110,15 +110,15 @@ function(req) {
 function(req) {
   fileArray <- req$postBody
   fileNames <- fromJSON(fileArray)
-  algorithm <- fileNames$algorithm
+  algo <- fileNames$algorithm
   cache_key <- fileNames$fileNames
   if (file.exists(paste0(cache_key, ".rds"))) {
     cached_result <- readRDS(paste0(cache_key, ".rds"))
     settings<-get_default_ProcessingSettings(
       call = "find_features",
-      algorithm = algorithm
+      algorithm = "centwave"
     )
-    updated_cache<-cached_result$find_features(settings)
+    updated_cache<-cached_result$find_features(settings=settings)
     print("applying find features...")
     saveRDS(updated_cache, paste0(cache_key, ".rds"))
     print("updating cache...")
@@ -137,7 +137,6 @@ function(req) {
   params<-datajson$parameters
   cache_key<-datajson$msData
   print(cache_key)
-  browser()
   settings <- list(
     call = "find_features",
     algorithm = "xcms3",
@@ -175,15 +174,17 @@ return(result)}}
 #* Applying group_features on MsData for a given file
 #* @post /group_features
 function(req) {
+  browser()
   fileArray <- req$postBody
   fileNames <- fromJSON(fileArray)
   cache_key <- paste(sort(fileNames), collapse = "_")
   if (file.exists(paste0(cache_key, ".rds"))) {
     cached_result <- readRDS(paste0(cache_key, ".rds"))
-    gfs<-get_default_ProcessingSettings(
+    gfs <- get_default_ProcessingSettings(
       call = "group_features",
-      algorithm = "peakdensity"
+      algorithm = "xcms3_peakdensity"
     )
+    print(gfs)
     updated_cache<-cached_result$group_features(gfs)
     print(updated_cache)
     print("grouping features...")

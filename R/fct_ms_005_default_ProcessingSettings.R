@@ -17,7 +17,6 @@ get_default_ProcessingSettings <- function(call = NA_character_,
 
   settings <- NULL
 print(algorithm)
-debug()
   if ("find_features" %in% call) {
 
     if ("centwave" %in% algorithm) {
