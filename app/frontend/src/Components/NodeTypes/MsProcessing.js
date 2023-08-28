@@ -190,7 +190,7 @@ function MsProcessing({
             onChange={(event) => setAlgo(event.target.value)}
           >
             <option value="">Select</option>
-            <option value="xcms3">xcms3</option>
+            <option value="centwave">centwave</option>
           </select>
           <Button onClick={getFeatures}>Apply!</Button>
         </Box>

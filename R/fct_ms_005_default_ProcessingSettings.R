@@ -216,16 +216,17 @@ save_default_ProcessingSettings <- function(call = NA_character_,
   }
 
   settings <- list(
-    call = "find_features",
+    call = "group_features",
     algorithm = "xcms3",
-    parameters = xcms::PeakDensityParam(
+    parameters = list(
+    groupParam = xcms::PeakDensityParam(
       sampleGroups = "holder",
       bw = 5,
       minFraction = 0.5,
       minSamples = 1,
       binSize = 0.008,
       maxFeatures = 100
-    ),
+  )),
     software = "xcms",
     developer = "Colin Smith, Johannes Rainer",
     contact = "siuzdak@scripps.edu",

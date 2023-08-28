@@ -116,8 +116,9 @@ function(req) {
     cached_result <- readRDS(paste0(cache_key, ".rds"))
     settings<-get_default_ProcessingSettings(
       call = "find_features",
-      algorithm = "centwave"
+      algorithm = algo
     )
+    print(settings)
     updated_cache<-cached_result$find_features(settings=settings)
     print("applying find features...")
     saveRDS(updated_cache, paste0(cache_key, ".rds"))
@@ -174,18 +175,17 @@ return(result)}}
 #* Applying group_features on MsData for a given file
 #* @post /group_features
 function(req) {
-  browser()
   fileArray <- req$postBody
   fileNames <- fromJSON(fileArray)
   cache_key <- paste(sort(fileNames), collapse = "_")
   if (file.exists(paste0(cache_key, ".rds"))) {
     cached_result <- readRDS(paste0(cache_key, ".rds"))
-    gfs <- get_default_ProcessingSettings(
+    settings <- get_default_ProcessingSettings(
       call = "group_features",
-      algorithm = "xcms3_peakdensity"
+      algorithm = "peakdensity"
     )
-    print(gfs)
-    updated_cache<-cached_result$group_features(gfs)
+    print(settings)
+    updated_cache<-cached_result$group_features(settings)
     print(updated_cache)
     print("grouping features...")
     saveRDS(updated_cache, paste0(cache_key, ".rds"))
