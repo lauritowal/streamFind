@@ -272,7 +272,7 @@ List rcpp_ms_make_groups_update_features(Rcpp::DataFrame features) {
       StringVector f_ana(1);
       f_ana(0) = f_analyses(f);
 
-      for (int a=0; a<n_analyses; ++a) {
+      for (int a = 0; a < n_analyses; ++a) {
         if (analyses(a) == f_ana(0)) {
           ints(i, a) = f_ints[f];
         }
@@ -322,7 +322,7 @@ List rcpp_ms_make_groups_update_features(Rcpp::DataFrame features) {
 
     }
 
-    for (int f=0; f<which_idx_size; ++f) {
+    for (int f = 0; f < which_idx_size; ++f) {
       int f_to_change = which_idx[f];
       features_groups_ids(f_to_change) = groups_ids(i);
     }
@@ -373,7 +373,7 @@ List rcpp_ms_make_groups_update_features(Rcpp::DataFrame features) {
     list_groups["mz"] = g_mz;
   }
 
-  for (int a=0; a<n_analyses; ++a) {
+  for (int a = 0; a < n_analyses; ++a) {
     NumericVector int_vals = ints( _ , a );
     int_vals = int_vals[idx_mass];
     int_vals = int_vals[idx_rt];
@@ -390,6 +390,14 @@ List rcpp_ms_make_groups_update_features(Rcpp::DataFrame features) {
 
   list_groups["filled"] = g_filled;
   list_groups["filtered"] = rep(false, number_of_groups);
+
+  Rcpp::CharacterVector filter_column(number_of_groups);
+
+  for (int i = 0; i < number_of_groups; ++i) {
+    filter_column[i] = Rcpp::CharacterVector::get_na();
+  }
+
+  list_groups["filter"] = filter_column;
 
   list_groups.attr("class") = Rcpp::CharacterVector::create("data.table", "data.frame");
 

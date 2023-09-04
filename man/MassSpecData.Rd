@@ -4,31 +4,13 @@
 \alias{MassSpecData}
 \title{\strong{MassSpecData} R6 class and methods}
 \description{
-The MassSpecData R6 class is a framework with methods for parsing, processing,
-visualizing and storing MS data.
+The MassSpecData R6 class is a framework with methods for parsing,
+processing, visualizing and storing mass spectrometry (MS) data.
 }
 \references{
 \insertRef{patroon01}{streamFind}
 
 \insertRef{patroon02}{streamFind}
-
-\insertRef{mzr01}{streamFind}
-
-\insertRef{mzr02}{streamFind}
-
-\insertRef{mzr03}{streamFind}
-
-\insertRef{mzr04}{streamFind}
-
-\insertRef{proteo01}{streamFind}
-
-\insertRef{proteo02}{streamFind}
-
-\insertRef{xcms01}{streamFind}
-
-\insertRef{xcms02}{streamFind}
-
-\insertRef{xcms03}{streamFind}
 }
 \section{Methods}{
 \subsection{Public methods}{
@@ -36,6 +18,7 @@ visualizing and storing MS data.
 \item \href{#method-MassSpecData-new}{\code{MassSpecData$new()}}
 \item \href{#method-MassSpecData-print}{\code{MassSpecData$print()}}
 \item \href{#method-MassSpecData-get_headers}{\code{MassSpecData$get_headers()}}
+\item \href{#method-MassSpecData-get_history}{\code{MassSpecData$get_history()}}
 \item \href{#method-MassSpecData-get_analyses}{\code{MassSpecData$get_analyses()}}
 \item \href{#method-MassSpecData-get_number_analyses}{\code{MassSpecData$get_number_analyses()}}
 \item \href{#method-MassSpecData-get_overview}{\code{MassSpecData$get_overview()}}
@@ -66,6 +49,7 @@ visualizing and storing MS data.
 \item \href{#method-MassSpecData-get_ms1}{\code{MassSpecData$get_ms1()}}
 \item \href{#method-MassSpecData-get_ms2}{\code{MassSpecData$get_ms2()}}
 \item \href{#method-MassSpecData-get_settings}{\code{MassSpecData$get_settings()}}
+\item \href{#method-MassSpecData-get_settings_names}{\code{MassSpecData$get_settings_names()}}
 \item \href{#method-MassSpecData-get_features}{\code{MassSpecData$get_features()}}
 \item \href{#method-MassSpecData-get_features_eic}{\code{MassSpecData$get_features_eic()}}
 \item \href{#method-MassSpecData-get_features_ms1}{\code{MassSpecData$get_features_ms1()}}
@@ -74,14 +58,21 @@ visualizing and storing MS data.
 \item \href{#method-MassSpecData-get_groups}{\code{MassSpecData$get_groups()}}
 \item \href{#method-MassSpecData-get_groups_ms1}{\code{MassSpecData$get_groups_ms1()}}
 \item \href{#method-MassSpecData-get_groups_ms2}{\code{MassSpecData$get_groups_ms2()}}
+\item \href{#method-MassSpecData-get_groups_coverage}{\code{MassSpecData$get_groups_coverage()}}
+\item \href{#method-MassSpecData-get_components}{\code{MassSpecData$get_components()}}
+\item \href{#method-MassSpecData-get_suspects}{\code{MassSpecData$get_suspects()}}
+\item \href{#method-MassSpecData-get_modules_data}{\code{MassSpecData$get_modules_data()}}
 \item \href{#method-MassSpecData-add_headers}{\code{MassSpecData$add_headers()}}
 \item \href{#method-MassSpecData-add_settings}{\code{MassSpecData$add_settings()}}
 \item \href{#method-MassSpecData-add_analyses}{\code{MassSpecData$add_analyses()}}
 \item \href{#method-MassSpecData-add_replicate_names}{\code{MassSpecData$add_replicate_names()}}
 \item \href{#method-MassSpecData-add_blank_names}{\code{MassSpecData$add_blank_names()}}
+\item \href{#method-MassSpecData-add_spectra}{\code{MassSpecData$add_spectra()}}
+\item \href{#method-MassSpecData-add_features_eic}{\code{MassSpecData$add_features_eic()}}
 \item \href{#method-MassSpecData-add_features}{\code{MassSpecData$add_features()}}
 \item \href{#method-MassSpecData-add_groups}{\code{MassSpecData$add_groups()}}
 \item \href{#method-MassSpecData-add_alignment}{\code{MassSpecData$add_alignment()}}
+\item \href{#method-MassSpecData-add_modules_data}{\code{MassSpecData$add_modules_data()}}
 \item \href{#method-MassSpecData-load_spectra}{\code{MassSpecData$load_spectra()}}
 \item \href{#method-MassSpecData-load_chromatograms}{\code{MassSpecData$load_chromatograms()}}
 \item \href{#method-MassSpecData-load_features_ms1}{\code{MassSpecData$load_features_ms1()}}
@@ -109,6 +100,7 @@ visualizing and storing MS data.
 \item \href{#method-MassSpecData-has_loaded_groups_ms1}{\code{MassSpecData$has_loaded_groups_ms1()}}
 \item \href{#method-MassSpecData-has_loaded_groups_ms2}{\code{MassSpecData$has_loaded_groups_ms2()}}
 \item \href{#method-MassSpecData-has_settings}{\code{MassSpecData$has_settings()}}
+\item \href{#method-MassSpecData-has_features_eic}{\code{MassSpecData$has_features_eic()}}
 \item \href{#method-MassSpecData-has_features}{\code{MassSpecData$has_features()}}
 \item \href{#method-MassSpecData-has_alignment}{\code{MassSpecData$has_alignment()}}
 \item \href{#method-MassSpecData-has_groups}{\code{MassSpecData$has_groups()}}
@@ -128,8 +120,14 @@ visualizing and storing MS data.
 \item \href{#method-MassSpecData-plot_groups_ms1}{\code{MassSpecData$plot_groups_ms1()}}
 \item \href{#method-MassSpecData-plot_groups_ms2}{\code{MassSpecData$plot_groups_ms2()}}
 \item \href{#method-MassSpecData-plot_groups_overview}{\code{MassSpecData$plot_groups_overview()}}
+\item \href{#method-MassSpecData-map_components}{\code{MassSpecData$map_components()}}
+\item \href{#method-MassSpecData-centroid_spectra}{\code{MassSpecData$centroid_spectra()}}
+\item \href{#method-MassSpecData-bin_spectra}{\code{MassSpecData$bin_spectra()}}
 \item \href{#method-MassSpecData-find_features}{\code{MassSpecData$find_features()}}
 \item \href{#method-MassSpecData-group_features}{\code{MassSpecData$group_features()}}
+\item \href{#method-MassSpecData-filter_features}{\code{MassSpecData$filter_features()}}
+\item \href{#method-MassSpecData-annotate_features}{\code{MassSpecData$annotate_features()}}
+\item \href{#method-MassSpecData-suspect_screening}{\code{MassSpecData$suspect_screening()}}
 \item \href{#method-MassSpecData-as_features_patRoon}{\code{MassSpecData$as_features_patRoon()}}
 \item \href{#method-MassSpecData-check_correspondence}{\code{MassSpecData$check_correspondence()}}
 \item \href{#method-MassSpecData-save_headers}{\code{MassSpecData$save_headers()}}
@@ -141,6 +139,7 @@ visualizing and storing MS data.
 \item \href{#method-MassSpecData-import_settings}{\code{MassSpecData$import_settings()}}
 \item \href{#method-MassSpecData-import_analyses}{\code{MassSpecData$import_analyses()}}
 \item \href{#method-MassSpecData-import_groups}{\code{MassSpecData$import_groups()}}
+\item \href{#method-MassSpecData-import_all}{\code{MassSpecData$import_all()}}
 \item \href{#method-MassSpecData-processing_function_calls}{\code{MassSpecData$processing_function_calls()}}
 \item \href{#method-MassSpecData-clone}{\code{MassSpecData$clone()}}
 }
@@ -149,6 +148,9 @@ visualizing and storing MS data.
 \if{html}{\out{<a id="method-MassSpecData-new"></a>}}
 \if{latex}{\out{\hypertarget{method-MassSpecData-new}{}}}
 \subsection{Method \code{new()}}{
+Registers changes in the history private field.
+
+
 Checks the analyses argument as a character/integer vector to match
 analyses names or indices from the \code{MassSpecData} object. Returns a valid
 character vector with analysis names or \code{NULL} for non-matching.
@@ -157,10 +159,42 @@ character vector with analysis names or \code{NULL} for non-matching.
 Gets an entry from the analyses private field.
 
 
+Extracts and validates ProcessingSettings for a given call.
+
+
+Filters features and feature groups with minimum intensity.
+
+
+Filters features and feature groups with minimum intensity.
+
+
+Filters features and feature groups with minimum signal-to-noise ratio.
+
+
+Filters features annotated as isotopes when groups are present the
+isotopes are filtered if present in the all samples of a replicate.
+
+
+Filters feature groups with max replicate group intensity deviation.
+
+
+Filters feature groups with max replicate group abundance.
+
+
+Filters feature groups which not higher then the defined threshold of the
+corresponding blank replicate group.
+
+
+Filters features and feature groups within a retention time range.
+
+
+Filters features and feature groups within a mass range.
+
+
 Creates an R6 MassSpecData class object. When \code{headers} are not given
-(i.e., \code{NULL}), a default Headers S3 class object is generated with name
+(i.e., \code{NULL}), a default ProjectHeaders S3 class object is generated with name
 as \code{NA_character}, path as \code{get_wd()} and date as \code{Sys.time()}.
-See \code{?Headers} for more information.
+See \code{?ProjectHeaders} for more information.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MassSpecData$new(
   files = NULL,
@@ -187,11 +221,12 @@ replicate group name (character). Note the file paths must have the extension
 processing. Note that parallel processing is not always faster due to
 overhead.}
 
-\item{\code{headers}}{A named list with headers or a Headers S3 class object.
+\item{\code{headers}}{A named list with headers or a ProjectHeaders S3 class object.
 Each list element must have length one. There is no type restrictions
-except for name (must be type character), path (must be type
-character) and date (must be class POSIXct or class POSIXt). See more
-information in \code{?Headers}.}
+except for name (must be type character length 1), author (must be type
+character length 1), path (must be type character length 1) and date (must
+be class POSIXct or class POSIXt length 1). See more information in
+\code{?ProjectHeaders}.}
 
 \item{\code{settings}}{A named list of ProcessingSettings S3 class objects or a
 single ProcessingSettings S3 class object. The list names should match
@@ -250,6 +285,19 @@ When \code{NULL}, the entire headers list is returned.}
 }
 \subsection{Returns}{
 The headers list or the header elements as defined by \code{value}.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-MassSpecData-get_history"></a>}}
+\if{latex}{\out{\hypertarget{method-MassSpecData-get_history}{}}}
+\subsection{Method \code{get_history()}}{
+Gets the object history.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{MassSpecData$get_history()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+The history list of processing steps applied.
 }
 }
 \if{html}{\out{<hr>}}
@@ -370,7 +418,7 @@ A character vector.
 \if{html}{\out{<a id="method-MassSpecData-get_files"></a>}}
 \if{latex}{\out{\hypertarget{method-MassSpecData-get_files}{}}}
 \subsection{Method \code{get_files()}}{
-Gets the polarity of the analyses.
+Gets the full file paths of each analysis.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MassSpecData$get_files(analyses = NULL)}\if{html}{\out{</div>}}
 }
@@ -391,7 +439,7 @@ A character vector.
 \if{html}{\out{<a id="method-MassSpecData-get_formats"></a>}}
 \if{latex}{\out{\hypertarget{method-MassSpecData-get_formats}{}}}
 \subsection{Method \code{get_formats()}}{
-Gets the file format of the analyses.
+Gets the file format of each analysis.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MassSpecData$get_formats(analyses = NULL)}\if{html}{\out{</div>}}
 }
@@ -412,7 +460,7 @@ A character vector.
 \if{html}{\out{<a id="method-MassSpecData-get_types"></a>}}
 \if{latex}{\out{\hypertarget{method-MassSpecData-get_types}{}}}
 \subsection{Method \code{get_types()}}{
-Gets the type of the analyses.
+Gets the type of each analysis.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MassSpecData$get_types(analyses = NULL)}\if{html}{\out{</div>}}
 }
@@ -433,7 +481,7 @@ A character vector.
 \if{html}{\out{<a id="method-MassSpecData-get_time_stamps"></a>}}
 \if{latex}{\out{\hypertarget{method-MassSpecData-get_time_stamps}{}}}
 \subsection{Method \code{get_time_stamps()}}{
-Gets the time stamp of the analyses.
+Gets the time stamp of the each analysis.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MassSpecData$get_time_stamps(analyses = NULL)}\if{html}{\out{</div>}}
 }
@@ -454,7 +502,7 @@ A character vector.
 \if{html}{\out{<a id="method-MassSpecData-get_spectra_number"></a>}}
 \if{latex}{\out{\hypertarget{method-MassSpecData-get_spectra_number}{}}}
 \subsection{Method \code{get_spectra_number()}}{
-Gets the polarity of the analyses.
+Gets the number of spectra in each analysis.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MassSpecData$get_spectra_number(analyses = NULL)}\if{html}{\out{</div>}}
 }
@@ -475,7 +523,7 @@ A character vector.
 \if{html}{\out{<a id="method-MassSpecData-get_spectra_mode"></a>}}
 \if{latex}{\out{\hypertarget{method-MassSpecData-get_spectra_mode}{}}}
 \subsection{Method \code{get_spectra_mode()}}{
-Gets the polarity of the analyses.
+Gets the spectra mode of each analysis (i.e., profile or centroided).
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MassSpecData$get_spectra_mode(analyses = NULL)}\if{html}{\out{</div>}}
 }
@@ -496,7 +544,7 @@ A character vector.
 \if{html}{\out{<a id="method-MassSpecData-get_spectra_levels"></a>}}
 \if{latex}{\out{\hypertarget{method-MassSpecData-get_spectra_levels}{}}}
 \subsection{Method \code{get_spectra_levels()}}{
-Gets the spectra levels of the analyses.
+Gets the spectra levels of each analysis.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MassSpecData$get_spectra_levels(analyses = NULL)}\if{html}{\out{</div>}}
 }
@@ -517,7 +565,7 @@ A list for each analysis with an integer vector.
 \if{html}{\out{<a id="method-MassSpecData-get_mz_low"></a>}}
 \if{latex}{\out{\hypertarget{method-MassSpecData-get_mz_low}{}}}
 \subsection{Method \code{get_mz_low()}}{
-Gets the polarity of the analyses.
+Gets the lower \emph{m/z} value of each analysis.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MassSpecData$get_mz_low(analyses = NULL)}\if{html}{\out{</div>}}
 }
@@ -538,7 +586,7 @@ A character vector.
 \if{html}{\out{<a id="method-MassSpecData-get_mz_high"></a>}}
 \if{latex}{\out{\hypertarget{method-MassSpecData-get_mz_high}{}}}
 \subsection{Method \code{get_mz_high()}}{
-Gets the polarity of the analyses.
+Gets the higher \emph{m/z} value of each analysis.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MassSpecData$get_mz_high(analyses = NULL)}\if{html}{\out{</div>}}
 }
@@ -559,7 +607,7 @@ A character vector.
 \if{html}{\out{<a id="method-MassSpecData-get_rt_start"></a>}}
 \if{latex}{\out{\hypertarget{method-MassSpecData-get_rt_start}{}}}
 \subsection{Method \code{get_rt_start()}}{
-Gets the polarity of the analyses.
+Gets the start retention time value of each analysis.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MassSpecData$get_rt_start(analyses = NULL)}\if{html}{\out{</div>}}
 }
@@ -580,7 +628,7 @@ A character vector.
 \if{html}{\out{<a id="method-MassSpecData-get_rt_end"></a>}}
 \if{latex}{\out{\hypertarget{method-MassSpecData-get_rt_end}{}}}
 \subsection{Method \code{get_rt_end()}}{
-Gets the polarity of the analyses.
+Gets the end retention time value of each analysis.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MassSpecData$get_rt_end(analyses = NULL)}\if{html}{\out{</div>}}
 }
@@ -601,7 +649,7 @@ A character vector.
 \if{html}{\out{<a id="method-MassSpecData-get_polarities"></a>}}
 \if{latex}{\out{\hypertarget{method-MassSpecData-get_polarities}{}}}
 \subsection{Method \code{get_polarities()}}{
-Gets the polarity of the analyses.
+Gets the polarity of each analysis.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MassSpecData$get_polarities(analyses = NULL)}\if{html}{\out{</div>}}
 }
@@ -622,7 +670,7 @@ A character vector.
 \if{html}{\out{<a id="method-MassSpecData-get_chromatograms_number"></a>}}
 \if{latex}{\out{\hypertarget{method-MassSpecData-get_chromatograms_number}{}}}
 \subsection{Method \code{get_chromatograms_number()}}{
-Gets the number of chromatograms in the analyses.
+Gets the number of chromatograms in each analysis.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MassSpecData$get_chromatograms_number(analyses = NULL)}\if{html}{\out{</div>}}
 }
@@ -643,7 +691,7 @@ A character vector.
 \if{html}{\out{<a id="method-MassSpecData-get_instrument_info"></a>}}
 \if{latex}{\out{\hypertarget{method-MassSpecData-get_instrument_info}{}}}
 \subsection{Method \code{get_instrument_info()}}{
-Gets the instrument information for each analyses.
+Gets the instrument information of each analysis.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MassSpecData$get_instrument_info(analyses = NULL)}\if{html}{\out{</div>}}
 }
@@ -664,7 +712,7 @@ A data.table.
 \if{html}{\out{<a id="method-MassSpecData-get_software_info"></a>}}
 \if{latex}{\out{\hypertarget{method-MassSpecData-get_software_info}{}}}
 \subsection{Method \code{get_software_info()}}{
-Gets the software information for each analyses.
+Gets the software information of each analysis.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MassSpecData$get_software_info(analyses = NULL)}\if{html}{\out{</div>}}
 }
@@ -685,7 +733,7 @@ A data.table.
 \if{html}{\out{<a id="method-MassSpecData-get_run"></a>}}
 \if{latex}{\out{\hypertarget{method-MassSpecData-get_run}{}}}
 \subsection{Method \code{get_run()}}{
-Gets the run summary data.table for each analyses.
+Gets the run summary data.table of each analysis.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MassSpecData$get_run(analyses = NULL)}\if{html}{\out{</div>}}
 }
@@ -706,7 +754,7 @@ A data.table.
 \if{html}{\out{<a id="method-MassSpecData-get_tic"></a>}}
 \if{latex}{\out{\hypertarget{method-MassSpecData-get_tic}{}}}
 \subsection{Method \code{get_tic()}}{
-Gets the total ion chromatogram (TIC) from the analyses.
+Gets the total ion chromatogram (TIC) of each analysis.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MassSpecData$get_tic(analyses = NULL, levels = 1)}\if{html}{\out{</div>}}
 }
@@ -730,7 +778,7 @@ A data.table with the TIC chromatogram.
 \if{html}{\out{<a id="method-MassSpecData-get_bpc"></a>}}
 \if{latex}{\out{\hypertarget{method-MassSpecData-get_bpc}{}}}
 \subsection{Method \code{get_bpc()}}{
-Gets the base peak chromatogram (BPC) from the analyses.
+Gets the base peak chromatogram (BPC) of each analysis.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MassSpecData$get_bpc(analyses = NULL, levels = 1)}\if{html}{\out{</div>}}
 }
@@ -754,7 +802,7 @@ A character vector.
 \if{html}{\out{<a id="method-MassSpecData-get_spectra"></a>}}
 \if{latex}{\out{\hypertarget{method-MassSpecData-get_spectra}{}}}
 \subsection{Method \code{get_spectra()}}{
-Gets spectra from the MS analyses.
+Gets spectra from each analysis.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MassSpecData$get_spectra(
   analyses = NULL,
@@ -833,7 +881,7 @@ targets, when defined.
 \if{html}{\out{<a id="method-MassSpecData-get_chromatograms"></a>}}
 \if{latex}{\out{\hypertarget{method-MassSpecData-get_chromatograms}{}}}
 \subsection{Method \code{get_chromatograms()}}{
-Gets chromatograms from the MS analyses.
+Gets chromatograms from each analysis.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MassSpecData$get_chromatograms(
   analyses = NULL,
@@ -934,6 +982,7 @@ Gets MS1 data from the analyses based on targets.
   sec = 60,
   id = NULL,
   mzClust = 0.003,
+  isInAllSpectra = TRUE,
   verbose = FALSE,
   minIntensity = 1000,
   runParallel = FALSE
@@ -972,6 +1021,11 @@ combination of the \emph{m/z} and retention time ranges or values.}
 \item{\code{mzClust}}{Numeric value with the mass deviation threshold (in Da) to
 cluster mass traces. Highly dependent on the mass resolution of the MS data.}
 
+\item{\code{isInAllSpectra}}{Logical with length one. When \code{TRUE}, traces are kept
+if present in all spectra. For MS2 data and when applied multiple collision
+energies, the presence is evaluated for traces within spectra of each
+collision energy.}
+
 \item{\code{verbose}}{Logical with length one. Set \code{TRUE} to output diagnostic and
 result messages. When \code{FALSE}, some messages are omitted.}
 
@@ -1002,6 +1056,7 @@ Gets MS2 data from the analyses based on targets.
   id = NULL,
   isolationWindow = 1.3,
   mzClust = 0.005,
+  isInAllSpectra = TRUE,
   verbose = FALSE,
   minIntensity = 0,
   runParallel = FALSE
@@ -1044,6 +1099,11 @@ data (i.e., MS2 data).}
 \item{\code{mzClust}}{Numeric value with the mass deviation threshold (in Da) to
 cluster mass traces. Highly dependent on the mass resolution of the MS data.}
 
+\item{\code{isInAllSpectra}}{Logical with length one. When \code{TRUE}, traces are kept
+if present in all spectra. For MS2 data and when applied multiple collision
+energies, the presence is evaluated for traces within spectra of each
+collision energy.}
+
 \item{\code{verbose}}{Logical with length one. Set \code{TRUE} to output diagnostic and
 result messages. When \code{FALSE}, some messages are omitted.}
 
@@ -1078,6 +1138,19 @@ processing method/s.}
 }
 \subsection{Returns}{
 A list with ProcessingSettings S3 class object/s.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-MassSpecData-get_settings_names"></a>}}
+\if{latex}{\out{\hypertarget{method-MassSpecData-get_settings_names}{}}}
+\subsection{Method \code{get_settings_names()}}{
+Gets the names of all present processing settings.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{MassSpecData$get_settings_names()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+A character vector with the name of with the ProcessingSettings.
 }
 }
 \if{html}{\out{<hr>}}
@@ -1231,7 +1304,7 @@ A data.table.
 \if{html}{\out{<a id="method-MassSpecData-get_features_ms1"></a>}}
 \if{latex}{\out{\hypertarget{method-MassSpecData-get_features_ms1}{}}}
 \subsection{Method \code{get_features_ms1()}}{
-Gets an averaged MS1 spectrum for features in analyses.
+Gets an averaged MS1 spectrum for features in the analyses.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MassSpecData$get_features_ms1(
   analyses = NULL,
@@ -1244,6 +1317,7 @@ Gets an averaged MS1 spectrum for features in analyses.
   rtWindow = c(-2, 2),
   mzWindow = c(-5, 100),
   mzClust = 0.003,
+  isInAllSpectra = TRUE,
   minIntensity = 1000,
   verbose = FALSE,
   filtered = FALSE,
@@ -1306,6 +1380,11 @@ Note that the first element should be negative to expand to the left.}
 \item{\code{mzClust}}{Numeric value with the mass deviation threshold (in Da) to
 cluster mass traces. Highly dependent on the mass resolution of the MS data.}
 
+\item{\code{isInAllSpectra}}{Logical with length one. When \code{TRUE}, traces are kept
+if present in all spectra. For MS2 data and when applied multiple collision
+energies, the presence is evaluated for traces within spectra of each
+collision energy.}
+
 \item{\code{minIntensity}}{Numeric value with the minimum intensity.}
 
 \item{\code{verbose}}{Logical with length one. Set \code{TRUE} to output diagnostic and
@@ -1330,7 +1409,7 @@ A data.table.
 \if{html}{\out{<a id="method-MassSpecData-get_features_ms2"></a>}}
 \if{latex}{\out{\hypertarget{method-MassSpecData-get_features_ms2}{}}}
 \subsection{Method \code{get_features_ms2()}}{
-Gets an averaged MS2 spectrum for features in analyses.
+Gets an averaged MS2 spectrum for features in the analyses.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MassSpecData$get_features_ms2(
   analyses = NULL,
@@ -1342,6 +1421,7 @@ Gets an averaged MS2 spectrum for features in analyses.
   sec = 60,
   isolationWindow = 1.3,
   mzClust = 0.003,
+  isInAllSpectra = TRUE,
   minIntensity = 0,
   verbose = FALSE,
   filtered = FALSE,
@@ -1398,6 +1478,11 @@ data (i.e., MS2 data).}
 \item{\code{mzClust}}{Numeric value with the mass deviation threshold (in Da) to
 cluster mass traces. Highly dependent on the mass resolution of the MS data.}
 
+\item{\code{isInAllSpectra}}{Logical with length one. When \code{TRUE}, traces are kept
+if present in all spectra. For MS2 data and when applied multiple collision
+energies, the presence is evaluated for traces within spectra of each
+collision energy.}
+
 \item{\code{minIntensity}}{Numeric value with the minimum intensity.}
 
 \item{\code{verbose}}{Logical with length one. Set \code{TRUE} to output diagnostic and
@@ -1435,7 +1520,7 @@ A data.frame.
 \if{html}{\out{<a id="method-MassSpecData-get_groups"></a>}}
 \if{latex}{\out{\hypertarget{method-MassSpecData-get_groups}{}}}
 \subsection{Method \code{get_groups()}}{
-Gets feature groups from analyses.
+Gets feature groups from the analyses.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MassSpecData$get_groups(
   groups = NULL,
@@ -1504,7 +1589,7 @@ A data.table.
 \if{html}{\out{<a id="method-MassSpecData-get_groups_ms1"></a>}}
 \if{latex}{\out{\hypertarget{method-MassSpecData-get_groups_ms1}{}}}
 \subsection{Method \code{get_groups_ms1()}}{
-Gets an averaged MS1 spectrum for feature groups in analyses.
+Gets an averaged MS1 spectrum for feature groups in the analyses.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MassSpecData$get_groups_ms1(
   groups = NULL,
@@ -1516,9 +1601,11 @@ Gets an averaged MS1 spectrum for feature groups in analyses.
   rtWindow = c(-2, 2),
   mzWindow = c(-5, 90),
   mzClustFeatures = 0.003,
+  isInAllSpectraFeatures = TRUE,
   minIntensityFeatures = 1000,
   loadedFeaturesMS1 = TRUE,
   mzClustGroups = 0.003,
+  isInAllSpectraGroups = TRUE,
   minIntensityGroups = 1000,
   groupBy = "groups",
   verbose = FALSE,
@@ -1578,6 +1665,11 @@ Note that the first element should be negative to expand to the left.}
 (in Da) to cluster mass traces for features. Highly dependent on the mass
 resolution of the MS data.}
 
+\item{\code{isInAllSpectraFeatures}}{Logical with length one. When \code{TRUE}, traces
+from features are kept if present in all spectra. For MS2 data and when
+applied multiple collision energies, the presence is evaluated for traces
+within spectra of each collision energy.}
+
 \item{\code{minIntensityFeatures}}{Numeric value with the minimum intensity for
 features.}
 
@@ -1587,6 +1679,9 @@ loaded features MS1 data is used instead of extraction from raw data.}
 \item{\code{mzClustGroups}}{Numeric value with the mass deviation threshold
 (in Da) to cluster mass traces for feature groups. Highly dependent on the
 mass resolution of the MS data.}
+
+\item{\code{isInAllSpectraGroups}}{Logical with length one. When \code{TRUE}, traces are
+kept if present in all spectra from features.}
 
 \item{\code{minIntensityGroups}}{Numeric value with the minimum intensity for
 feature groups.}
@@ -1617,7 +1712,7 @@ A data.table.
 \if{html}{\out{<a id="method-MassSpecData-get_groups_ms2"></a>}}
 \if{latex}{\out{\hypertarget{method-MassSpecData-get_groups_ms2}{}}}
 \subsection{Method \code{get_groups_ms2()}}{
-Gets an averaged MS2 spectrum for feature groups in analyses.
+Gets an averaged MS2 spectrum for feature groups in the analyses.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MassSpecData$get_groups_ms2(
   groups = NULL,
@@ -1628,9 +1723,11 @@ Gets an averaged MS2 spectrum for feature groups in analyses.
   sec = 60,
   isolationWindow = 1.3,
   mzClustFeatures = 0.003,
+  isInAllSpectraFeatures = TRUE,
   minIntensityFeatures = 100,
   loadedFeaturesMS2 = TRUE,
   mzClustGroups = 0.003,
+  isInAllSpectraGroups = TRUE,
   minIntensityGroups = 100,
   groupBy = "groups",
   verbose = FALSE,
@@ -1684,6 +1781,11 @@ data (i.e., MS2 data).}
 (in Da) to cluster mass traces for features. Highly dependent on the mass
 resolution of the MS data.}
 
+\item{\code{isInAllSpectraFeatures}}{Logical with length one. When \code{TRUE}, traces
+from features are kept if present in all spectra. For MS2 data and when
+applied multiple collision energies, the presence is evaluated for traces
+within spectra of each collision energy.}
+
 \item{\code{minIntensityFeatures}}{Numeric value with the minimum intensity for
 features.}
 
@@ -1693,6 +1795,9 @@ loaded features MS2 data is used instead of extraction from raw data.}
 \item{\code{mzClustGroups}}{Numeric value with the mass deviation threshold
 (in Da) to cluster mass traces for feature groups. Highly dependent on the
 mass resolution of the MS data.}
+
+\item{\code{isInAllSpectraGroups}}{Logical with length one. When \code{TRUE}, traces are
+kept if present in all spectra from features.}
 
 \item{\code{minIntensityGroups}}{Numeric value with the minimum intensity for
 feature groups.}
@@ -1720,6 +1825,203 @@ A data.table.
 }
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-MassSpecData-get_groups_coverage"></a>}}
+\if{latex}{\out{\hypertarget{method-MassSpecData-get_groups_coverage}{}}}
+\subsection{Method \code{get_groups_coverage()}}{
+Gets the percentage coverage of feature groups in the analyses (i.e.
+100\% means that a feature group is present in all the analyses).
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{MassSpecData$get_groups_coverage(
+  groups = NULL,
+  mass = NULL,
+  mz = NULL,
+  rt = NULL,
+  ppm = 20,
+  sec = 60,
+  filtered = FALSE,
+  minIntensity = 0
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{groups}}{A numeric/character vector with the number/id
+of feature groups.}
+
+\item{\code{mass}}{A vector with target neutral mass value/s (in Da) or a two columns
+data.table or data.frame named \code{min} and \code{max} with minimum and maximum
+neutral mass values (in Da), respectively. Alternatively, neutral mass (in Da)
+and retention time values (in seconds) can be given as one data.table or
+data.frame with columns named \code{mass} and \code{rt}. Then, the deviations given in
+the \code{ppm} and \code{sec} arguments are used to calculate the ranges.
+Also works with a data.table or data.frame with minimum and maximum values of
+neutral mass and retention time targets. In this case, the column names must
+be \code{min}, \code{max}, \code{rtmin} and \code{rtmax}. Note that when mass/time ranges
+are given, the \code{ppm} and \code{sec} arguments are not used.}
+
+\item{\code{mz}}{A vector with target \emph{m/z} value/s (in Da) or a two columns
+data.table or data.frame named \code{mzmin} and \code{mzmax} with minimum and maximum
+\emph{m/z} values (in Da), respectively. Alternatively, \emph{m/z} (in Da)
+and retention time values (in seconds) can be given as one data.table or
+data.frame with columns named \code{mz} and \code{rt}. Then, the deviations given in
+the \code{ppm} and \code{sec} arguments are used to calculate the ranges.
+Also works with a data.table or data.frame with minimum and maximum values of
+\emph{m/z} and retention time targets. In this case, the column names must
+be \code{mzmin}, \code{mzmax}, \code{rtmin} and \code{rtmax}. Note that when mass/time ranges
+are given, the \code{ppm} and \code{sec} arguments are not used.}
+
+\item{\code{rt}}{A vector with target retention time values (in seconds) or
+a two columns data.table or data.frame with minimum and maximum retention
+time values (in seconds).}
+
+\item{\code{ppm}}{Numeric of length one with the mass deviation, in ppm.}
+
+\item{\code{sec}}{Numeric of length one with the time deviation, in seconds.}
+
+\item{\code{filtered}}{Logical. When \code{TRUE}, filtered features/groups are considered.}
+
+\item{\code{minIntensity}}{Numeric value with the minimum intensity.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A data.table.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-MassSpecData-get_components"></a>}}
+\if{latex}{\out{\hypertarget{method-MassSpecData-get_components}{}}}
+\subsection{Method \code{get_components()}}{
+Gets feature components (i.e., isotope clusters and adducts) in the
+analyses.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{MassSpecData$get_components(
+  analyses = NULL,
+  groups = NULL,
+  features = NULL,
+  components = NULL,
+  mass = NULL,
+  mz = NULL,
+  rt = NULL,
+  ppm = 20,
+  sec = 60,
+  filtered = FALSE
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{analyses}}{A numeric/character vector with the number/name
+of the analyses.}
+
+\item{\code{groups}}{A numeric/character vector with the number/id
+of feature groups.}
+
+\item{\code{features}}{A character vector with the feature id/s or a data.frame or
+data.table with a column named \code{feature} with the feature id/s. A column
+named \code{analysis} can be given to specify from which analyses the features are
+returned.}
+
+\item{\code{components}}{A numeric vector with the number/s of feature component/s.}
+
+\item{\code{mass}}{A vector with target neutral mass value/s (in Da) or a two columns
+data.table or data.frame named \code{min} and \code{max} with minimum and maximum
+neutral mass values (in Da), respectively. Alternatively, neutral mass (in Da)
+and retention time values (in seconds) can be given as one data.table or
+data.frame with columns named \code{mass} and \code{rt}. Then, the deviations given in
+the \code{ppm} and \code{sec} arguments are used to calculate the ranges.
+Also works with a data.table or data.frame with minimum and maximum values of
+neutral mass and retention time targets. In this case, the column names must
+be \code{min}, \code{max}, \code{rtmin} and \code{rtmax}. Note that when mass/time ranges
+are given, the \code{ppm} and \code{sec} arguments are not used.}
+
+\item{\code{mz}}{A vector with target \emph{m/z} value/s (in Da) or a two columns
+data.table or data.frame named \code{mzmin} and \code{mzmax} with minimum and maximum
+\emph{m/z} values (in Da), respectively. Alternatively, \emph{m/z} (in Da)
+and retention time values (in seconds) can be given as one data.table or
+data.frame with columns named \code{mz} and \code{rt}. Then, the deviations given in
+the \code{ppm} and \code{sec} arguments are used to calculate the ranges.
+Also works with a data.table or data.frame with minimum and maximum values of
+\emph{m/z} and retention time targets. In this case, the column names must
+be \code{mzmin}, \code{mzmax}, \code{rtmin} and \code{rtmax}. Note that when mass/time ranges
+are given, the \code{ppm} and \code{sec} arguments are not used.}
+
+\item{\code{rt}}{A vector with target retention time values (in seconds) or
+a two columns data.table or data.frame with minimum and maximum retention
+time values (in seconds).}
+
+\item{\code{ppm}}{Numeric of length one with the mass deviation, in ppm.}
+
+\item{\code{sec}}{Numeric of length one with the time deviation, in seconds.}
+
+\item{\code{filtered}}{Logical. When \code{TRUE}, filtered features/groups are considered.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A data.table.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-MassSpecData-get_suspects"></a>}}
+\if{latex}{\out{\hypertarget{method-MassSpecData-get_suspects}{}}}
+\subsection{Method \code{get_suspects()}}{
+Gets suspects from features according to a defined database
+and mass (\code{ppm}) and time (\code{sec}) deviations.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{MassSpecData$get_suspects(analyses = NULL, database = NULL, ppm = 4, sec = 10)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{analyses}}{A numeric/character vector with the number/name
+of the analyses.}
+
+\item{\code{database}}{A data.frame with at least the columns name
+and mass, indicating the name and neutral monoisotopic
+mass of the suspect targets.}
+
+\item{\code{ppm}}{Numeric of length one with the mass deviation, in ppm.}
+
+\item{\code{sec}}{Numeric of length one with the time deviation, in seconds.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Details}{
+The \code{ppm} and \code{sec} which indicate the
+mass (im ppm) and time (in seconds) deviations applied during the
+screening.
+}
+
+\subsection{Returns}{
+A data.frame with the suspects and matched features.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-MassSpecData-get_modules_data"></a>}}
+\if{latex}{\out{\hypertarget{method-MassSpecData-get_modules_data}{}}}
+\subsection{Method \code{get_modules_data()}}{
+Gets modules data.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{MassSpecData$get_modules_data(modules = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{modules}}{X.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+The list of modules data as defined by \code{modules} argument when
+\code{NULL} all data in modules is returned.
+}
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-MassSpecData-add_headers"></a>}}
 \if{latex}{\out{\hypertarget{method-MassSpecData-add_headers}{}}}
 \subsection{Method \code{add_headers()}}{
@@ -1727,7 +2029,7 @@ Adds headers. If an argument or element "name" is given, it must
 be type character. If an argument or element path is given, it must be
 type character and exist. If an argument or element date is given, it
 must be class POSIXct or POSIXt. If given date is character, conversion
-to class POSIXct or POSIXt is attempted. See \code{?Headers} for more
+to class POSIXct or POSIXt is attempted. See \code{?ProjectHeaders} for more
 information.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MassSpecData$add_headers(...)}\if{html}{\out{</div>}}
@@ -1753,7 +2055,7 @@ Invisible.
 \subsection{Method \code{add_settings()}}{
 Adds processing settings.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MassSpecData$add_settings(settings = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MassSpecData$add_settings(settings = NULL, replace = TRUE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -1764,6 +2066,9 @@ single ProcessingSettings S3 class object. The list names should match
 the call name of each ProcessingSettings object. Alternatively, a named
 list with call name, algorithm and parameters to be transformed and added
 as ProcessingSettings S3 class object.}
+
+\item{\code{replace}}{Logical. When \code{TRUE}, existing settings are replaced by
+the new settings with the same call name.}
 }
 \if{html}{\out{</div>}}
 }
@@ -1836,6 +2141,54 @@ Invisible.
 }
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-MassSpecData-add_spectra"></a>}}
+\if{latex}{\out{\hypertarget{method-MassSpecData-add_spectra}{}}}
+\subsection{Method \code{add_spectra()}}{
+Adds spectra to analyses.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{MassSpecData$add_spectra(spectra = NULL, replace = TRUE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{spectra}}{A data.table with spectra from MS analyses as obtained
+by the method \code{get_spectra()}.}
+
+\item{\code{replace}}{Logical. When \code{TRUE}, existing spectra are replaced by
+the new features.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+Invisible.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-MassSpecData-add_features_eic"></a>}}
+\if{latex}{\out{\hypertarget{method-MassSpecData-add_features_eic}{}}}
+\subsection{Method \code{add_features_eic()}}{
+Adds extracted ion chromatograms (EICs) of features to analyses.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{MassSpecData$add_features_eic(eics = NULL, replace = TRUE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{eics}}{A data.table with features from MS analyses as obtained
+by the method \code{get_features_eics()}.}
+
+\item{\code{replace}}{Logical. When \code{TRUE}, existing EICs of features are
+replaced by the new EICs.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+Invisible.
+}
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-MassSpecData-add_features"></a>}}
 \if{latex}{\out{\hypertarget{method-MassSpecData-add_features}{}}}
 \subsection{Method \code{add_features()}}{
@@ -1899,6 +2252,26 @@ Adds time alignment results.
 \item{\code{alignment}}{A named list with a data.table for each analysis with the
 results from alignment of features or correspondence of features across
 analyses. The names of the list must match the names of the analyses.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+Invisible.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-MassSpecData-add_modules_data"></a>}}
+\if{latex}{\out{\hypertarget{method-MassSpecData-add_modules_data}{}}}
+\subsection{Method \code{add_modules_data()}}{
+Adds data from modules to the MassSpecData.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{MassSpecData$add_modules_data(value = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{value}}{A named list with data from modules.}
 }
 \if{html}{\out{</div>}}
 }
@@ -2105,8 +2478,9 @@ Removes settings.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{call}}{A string or a vector of strings with the name/s of the
-processing method/s to be removed. When \code{call} is \code{NULL} all
-settings are removed.}
+processing method/s to be removed. Alternatively, an integer vector
+with the index/es of the settings to be removed. When \code{call} is
+\code{NULL} all settings are removed.}
 }
 \if{html}{\out{</div>}}
 }
@@ -2472,6 +2846,28 @@ Logical value.
 }
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-MassSpecData-has_features_eic"></a>}}
+\if{latex}{\out{\hypertarget{method-MassSpecData-has_features_eic}{}}}
+\subsection{Method \code{has_features_eic()}}{
+Checks for presence of feature extracted ion chromatograms (EICs) in
+given analyses names/indices.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{MassSpecData$has_features_eic(analyses = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{analyses}}{A numeric/character vector with the number/name
+of the analyses.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+Logical value.
+}
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-MassSpecData-has_features"></a>}}
 \if{latex}{\out{\hypertarget{method-MassSpecData-has_features}{}}}
 \subsection{Method \code{has_features()}}{
@@ -2539,6 +2935,7 @@ Plots spectra for given MS analyses.
   minIntensityMS1 = 0,
   minIntensityMS2 = 0,
   runParallel = FALSE,
+  legendNames = NULL,
   colorBy = "analyses"
 )}\if{html}{\out{</div>}}
 }
@@ -2592,6 +2989,8 @@ data (i.e., MS2 data).}
 \item{\code{runParallel}}{Logical of length one. Set to \code{TRUE} for parallel
 processing. Note that parallel processing is not always faster due to
 overhead.}
+
+\item{\code{legendNames}}{A character vector with the same length as the targets.}
 
 \item{\code{colorBy}}{A string of length 1. One of \code{analyses} (the default),
 \code{levels}, \code{targets} or \code{replicates}.}
@@ -2836,6 +3235,7 @@ Plots MS2 spectra from the analyses based on targets.
   id = NULL,
   isolationWindow = 1.3,
   mzClust = 0.005,
+  isInAllSpectra = TRUE,
   verbose = FALSE,
   minIntensity = 0,
   runParallel = FALSE,
@@ -2882,6 +3282,11 @@ data (i.e., MS2 data).}
 \item{\code{mzClust}}{Numeric value with the mass deviation threshold (in Da) to
 cluster mass traces. Highly dependent on the mass resolution of the MS data.}
 
+\item{\code{isInAllSpectra}}{Logical with length one. When \code{TRUE}, traces are kept
+if present in all spectra. For MS2 data and when applied multiple collision
+energies, the presence is evaluated for traces within spectra of each
+collision energy.}
+
 \item{\code{verbose}}{Logical with length one. Set \code{TRUE} to output diagnostic and
 result messages. When \code{FALSE}, some messages are omitted.}
 
@@ -2921,6 +3326,7 @@ Plots MS1 spectra from the analyses based on targets.
   sec = 60,
   id = NULL,
   mzClust = 0.001,
+  isInAllSpectra = TRUE,
   verbose = FALSE,
   minIntensity = 1000,
   runParallel = FALSE,
@@ -2962,6 +3368,11 @@ combination of the \emph{m/z} and retention time ranges or values.}
 
 \item{\code{mzClust}}{Numeric value with the mass deviation threshold (in Da) to
 cluster mass traces. Highly dependent on the mass resolution of the MS data.}
+
+\item{\code{isInAllSpectra}}{Logical with length one. When \code{TRUE}, traces are kept
+if present in all spectra. For MS2 data and when applied multiple collision
+energies, the presence is evaluated for traces within spectra of each
+collision energy.}
 
 \item{\code{verbose}}{Logical with length one. Set \code{TRUE} to output diagnostic and
 result messages. When \code{FALSE}, some messages are omitted.}
@@ -3191,6 +3602,7 @@ Plots MS1 spectra from features in the analyses.
   rtWindow = c(-2, 2),
   mzWindow = c(-5, 100),
   mzClust = 0.003,
+  isInAllSpectra = TRUE,
   minIntensity = 1000,
   verbose = FALSE,
   filtered = FALSE,
@@ -3257,6 +3669,11 @@ Note that the first element should be negative to expand to the left.}
 \item{\code{mzClust}}{Numeric value with the mass deviation threshold (in Da) to
 cluster mass traces. Highly dependent on the mass resolution of the MS data.}
 
+\item{\code{isInAllSpectra}}{Logical with length one. When \code{TRUE}, traces are kept
+if present in all spectra. For MS2 data and when applied multiple collision
+energies, the presence is evaluated for traces within spectra of each
+collision energy.}
+
 \item{\code{minIntensity}}{Numeric value with the minimum intensity.}
 
 \item{\code{verbose}}{Logical with length one. Set \code{TRUE} to output diagnostic and
@@ -3303,6 +3720,7 @@ Plots MS2 spectra from features in the analyses.
   sec = 60,
   isolationWindow = 1.3,
   mzClust = 0.005,
+  isInAllSpectra = TRUE,
   minIntensity = 0,
   verbose = FALSE,
   filtered = FALSE,
@@ -3362,6 +3780,11 @@ data (i.e., MS2 data).}
 
 \item{\code{mzClust}}{Numeric value with the mass deviation threshold (in Da) to
 cluster mass traces. Highly dependent on the mass resolution of the MS data.}
+
+\item{\code{isInAllSpectra}}{Logical with length one. When \code{TRUE}, traces are kept
+if present in all spectra. For MS2 data and when applied multiple collision
+energies, the presence is evaluated for traces within spectra of each
+collision energy.}
 
 \item{\code{minIntensity}}{Numeric value with the minimum intensity.}
 
@@ -3511,6 +3934,7 @@ Plots MS1 spectra from feature groups in the analyses.
   rtWindow = c(-2, 2),
   mzWindow = c(-5, 90),
   mzClustFeatures = 0.005,
+  isInAllSpectraFeatures = TRUE,
   minIntensityFeatures = 1000,
   loadedFeaturesMS1 = TRUE,
   mzClustGroups = 0.005,
@@ -3576,6 +4000,11 @@ Note that the first element should be negative to expand to the left.}
 (in Da) to cluster mass traces for features. Highly dependent on the mass
 resolution of the MS data.}
 
+\item{\code{isInAllSpectraFeatures}}{Logical with length one. When \code{TRUE}, traces
+from features are kept if present in all spectra. For MS2 data and when
+applied multiple collision energies, the presence is evaluated for traces
+within spectra of each collision energy.}
+
 \item{\code{minIntensityFeatures}}{Numeric value with the minimum intensity for
 features.}
 
@@ -3632,9 +4061,11 @@ Plots MS1 spectra from feature groups in the analyses.
   sec = 60,
   isolationWindow = 1.3,
   mzClustFeatures = 0.003,
+  isInAllSpectraFeatures = TRUE,
   minIntensityFeatures = 100,
   loadedFeaturesMS2 = TRUE,
   mzClustGroups = 0.003,
+  isInAllSpectraGroups = TRUE,
   minIntensityGroups = 100,
   verbose = FALSE,
   filtered = FALSE,
@@ -3691,6 +4122,11 @@ data (i.e., MS2 data).}
 (in Da) to cluster mass traces for features. Highly dependent on the mass
 resolution of the MS data.}
 
+\item{\code{isInAllSpectraFeatures}}{Logical with length one. When \code{TRUE}, traces
+from features are kept if present in all spectra. For MS2 data and when
+applied multiple collision energies, the presence is evaluated for traces
+within spectra of each collision energy.}
+
 \item{\code{minIntensityFeatures}}{Numeric value with the minimum intensity for
 features.}
 
@@ -3700,6 +4136,9 @@ loaded features MS2 data is used instead of extraction from raw data.}
 \item{\code{mzClustGroups}}{Numeric value with the mass deviation threshold
 (in Da) to cluster mass traces for feature groups. Highly dependent on the
 mass resolution of the MS data.}
+
+\item{\code{isInAllSpectraGroups}}{Logical with length one. When \code{TRUE}, traces are
+kept if present in all spectra from features.}
 
 \item{\code{minIntensityGroups}}{Numeric value with the minimum intensity for
 feature groups.}
@@ -3822,13 +4261,159 @@ A plot.
 }
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-MassSpecData-map_components"></a>}}
+\if{latex}{\out{\hypertarget{method-MassSpecData-map_components}{}}}
+\subsection{Method \code{map_components()}}{
+Maps components (i.e., isotope clusters and adducts) in the analyses.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{MassSpecData$map_components(
+  analyses = NULL,
+  groups = NULL,
+  features = NULL,
+  components = NULL,
+  mass = NULL,
+  mz = NULL,
+  rt = NULL,
+  ppm = 20,
+  sec = 60,
+  filtered = FALSE,
+  xlim = 30,
+  ylim = 0.05,
+  showLegend = TRUE,
+  legendNames = NULL,
+  title = NULL,
+  colorBy = "targets",
+  interactive = TRUE
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{analyses}}{A numeric/character vector with the number/name
+of the analyses.}
+
+\item{\code{groups}}{A numeric/character vector with the number/id
+of feature groups.}
+
+\item{\code{features}}{A character vector with the feature id/s or a data.frame or
+data.table with a column named \code{feature} with the feature id/s. A column
+named \code{analysis} can be given to specify from which analyses the features are
+returned.}
+
+\item{\code{components}}{A numeric vector with the number/s of feature component/s.}
+
+\item{\code{mass}}{A vector with target neutral mass value/s (in Da) or a two columns
+data.table or data.frame named \code{min} and \code{max} with minimum and maximum
+neutral mass values (in Da), respectively. Alternatively, neutral mass (in Da)
+and retention time values (in seconds) can be given as one data.table or
+data.frame with columns named \code{mass} and \code{rt}. Then, the deviations given in
+the \code{ppm} and \code{sec} arguments are used to calculate the ranges.
+Also works with a data.table or data.frame with minimum and maximum values of
+neutral mass and retention time targets. In this case, the column names must
+be \code{min}, \code{max}, \code{rtmin} and \code{rtmax}. Note that when mass/time ranges
+are given, the \code{ppm} and \code{sec} arguments are not used.}
+
+\item{\code{mz}}{A vector with target \emph{m/z} value/s (in Da) or a two columns
+data.table or data.frame named \code{mzmin} and \code{mzmax} with minimum and maximum
+\emph{m/z} values (in Da), respectively. Alternatively, \emph{m/z} (in Da)
+and retention time values (in seconds) can be given as one data.table or
+data.frame with columns named \code{mz} and \code{rt}. Then, the deviations given in
+the \code{ppm} and \code{sec} arguments are used to calculate the ranges.
+Also works with a data.table or data.frame with minimum and maximum values of
+\emph{m/z} and retention time targets. In this case, the column names must
+be \code{mzmin}, \code{mzmax}, \code{rtmin} and \code{rtmax}. Note that when mass/time ranges
+are given, the \code{ppm} and \code{sec} arguments are not used.}
+
+\item{\code{rt}}{A vector with target retention time values (in seconds) or
+a two columns data.table or data.frame with minimum and maximum retention
+time values (in seconds).}
+
+\item{\code{ppm}}{Numeric of length one with the mass deviation, in ppm.}
+
+\item{\code{sec}}{Numeric of length one with the time deviation, in seconds.}
+
+\item{\code{filtered}}{Logical. When \code{TRUE}, filtered features/groups are considered.}
+
+\item{\code{xlim}}{A length one or two numeric vector for setting the \emph{x}
+limits (in seconds) of the plot.}
+
+\item{\code{ylim}}{A length one or two numeric vector for setting the \emph{m/z}
+limits of the plot.}
+
+\item{\code{showLegend}}{Logical. Set to \code{TRUE} to show legend.}
+
+\item{\code{legendNames}}{A character vector with the same length as the targets.}
+
+\item{\code{title}}{A string with the title.}
+
+\item{\code{colorBy}}{A string of length 1. One of \code{analyses}, \code{targets} (the
+default) or \code{replicates}.}
+
+\item{\code{interactive}}{Logical. When \code{TRUE}, the data is plotted interactively
+using \pkg{plotly}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+A plot.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-MassSpecData-centroid_spectra"></a>}}
+\if{latex}{\out{\hypertarget{method-MassSpecData-centroid_spectra}{}}}
+\subsection{Method \code{centroid_spectra()}}{
+Centroids profile spectra data for each MS analysis.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{MassSpecData$centroid_spectra(settings = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{settings}}{A ProcessingSettings S3 class object with the call name
+applicable to the processing method. Alternatively, a named
+list with \code{call}, \code{algorithm} and \code{parameters} to be transformed and used as
+ProcessingSettings S3 class object. When not given, settings for the
+processing method will be searched within the \code{MassSpecData} object.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+Invisible.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-MassSpecData-bin_spectra"></a>}}
+\if{latex}{\out{\hypertarget{method-MassSpecData-bin_spectra}{}}}
+\subsection{Method \code{bin_spectra()}}{
+Bins centroided spectra for each MS analysis.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{MassSpecData$bin_spectra(settings = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{settings}}{A ProcessingSettings S3 class object with the call name
+applicable to the processing method. Alternatively, a named
+list with \code{call}, \code{algorithm} and \code{parameters} to be transformed and used as
+ProcessingSettings S3 class object. When not given, settings for the
+processing method will be searched within the \code{MassSpecData} object.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+Invisible.
+}
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-MassSpecData-find_features"></a>}}
 \if{latex}{\out{\hypertarget{method-MassSpecData-find_features}{}}}
 \subsection{Method \code{find_features()}}{
-Finds features (i.e., chromatographic peaks) from MS data
-in analyses. The function uses the \pkg{patRoon} package
-for peak finding, enabling the use of several algorithms (see details).
-Note that the settings call name must be "find_features".
+Finds features (i.e., chromatographic peaks) in the spectra
+data of the analyses. Note, MS data structure requirements vary between
+the available processing settings for finding features.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MassSpecData$find_features(settings = NULL)}\if{html}{\out{</div>}}
 }
@@ -3844,17 +4429,6 @@ processing method will be searched within the \code{MassSpecData} object.}
 }
 \if{html}{\out{</div>}}
 }
-\subsection{Details}{
-See the \link[patRoon]{findFeatures} function from the
-\pkg{patRoon} package or the
-\href{https://rickhelmus.github.io/patRoon/reference/findFeatures.html}{reference guide} for more information. The following algorithms are
-available via \pkg{patRoon}: "xcms3", "xcms", "openms", "envipick",
-"sirius", "kpic2", "safd". The algorithm in the  settings should be
-one of the described. The parameters are given as a list and should
-match with algorithm requirements. Certain algorithms also require
-defined MS file formats and data in profile mode.
-}
-
 \subsection{Returns}{
 Invisible.
 }
@@ -3863,10 +4437,7 @@ Invisible.
 \if{html}{\out{<a id="method-MassSpecData-group_features"></a>}}
 \if{latex}{\out{\hypertarget{method-MassSpecData-group_features}{}}}
 \subsection{Method \code{group_features()}}{
-Groups and aligns features across analyses.
-The function uses the \pkg{patRoon} package for grouping
-features, enabling the use of several algorithms (see details).
-Note that the settings call name must be "group_features".
+Groups and possibly aligns features across analyses.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MassSpecData$group_features(settings = NULL)}\if{html}{\out{</div>}}
 }
@@ -3882,18 +4453,91 @@ processing method will be searched within the \code{MassSpecData} object.}
 }
 \if{html}{\out{</div>}}
 }
+\subsection{Returns}{
+Invisible.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-MassSpecData-filter_features"></a>}}
+\if{latex}{\out{\hypertarget{method-MassSpecData-filter_features}{}}}
+\subsection{Method \code{filter_features()}}{
+Filters features and feature groups according to defined
+settings.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{MassSpecData$filter_features(settings = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{settings}}{A ProcessingSettings S3 class object with the call name
+applicable to the processing method. Alternatively, a named
+list with \code{call}, \code{algorithm} and \code{parameters} to be transformed and used as
+ProcessingSettings S3 class object. When not given, settings for the
+processing method will be searched within the \code{MassSpecData} object.}
+}
+\if{html}{\out{</div>}}
+}
 \subsection{Details}{
-See the \link[patRoon]{groupFeatures} function from the
-\pkg{patRoon} package or the
-\href{https://rickhelmus.github.io/patRoon/reference/groupFeatures.html}{reference guide}
-for more information. The following algorithms are
-possible: "xcms3", "xcms", "openms" or "kpic2". The algorithm slot in the
-settings should be one of the described. The parameters
-are given as a list and should match with algorithm requirements.
+The filtered features and feature groups are not entirely
+removed but tagged as filtered. See columns \code{filtered} and \code{filter}
+of the features and feature groups data.table as obtained with the
+methods \code{get_features()} and \code{get_groups()}, respectively.
 }
 
 \subsection{Returns}{
 Invisible.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-MassSpecData-annotate_features"></a>}}
+\if{latex}{\out{\hypertarget{method-MassSpecData-annotate_features}{}}}
+\subsection{Method \code{annotate_features()}}{
+Annotates isotopic features according to defined settings.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{MassSpecData$annotate_features(settings = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{settings}}{A ProcessingSettings S3 class object with the call name
+applicable to the processing method. Alternatively, a named
+list with \code{call}, \code{algorithm} and \code{parameters} to be transformed and used as
+ProcessingSettings S3 class object. When not given, settings for the
+processing method will be searched within the \code{MassSpecData} object.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Details}{
+Extra columns are added to the features data.table in each
+analysis.
+}
+
+\subsection{Returns}{
+Invisible.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-MassSpecData-suspect_screening"></a>}}
+\if{latex}{\out{\hypertarget{method-MassSpecData-suspect_screening}{}}}
+\subsection{Method \code{suspect_screening()}}{
+Screens for suspect targets in features according to defined
+settings.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{MassSpecData$suspect_screening(settings = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{settings}}{A ProcessingSettings S3 class object with the call name
+applicable to the processing method. Alternatively, a named
+list with \code{call}, \code{algorithm} and \code{parameters} to be transformed and used as
+ProcessingSettings S3 class object. When not given, settings for the
+processing method will be searched within the \code{MassSpecData} object.}
+}
+\if{html}{\out{</div>}}
 }
 }
 \if{html}{\out{<hr>}}
@@ -4098,7 +4742,7 @@ Invisible.
 \subsection{Method \code{import_settings()}}{
 Imports processing settings from a \emph{rds} or \emph{json} file.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MassSpecData$import_settings(file = NA_character_)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MassSpecData$import_settings(file = NA_character_, replace = TRUE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -4106,6 +4750,9 @@ Imports processing settings from a \emph{rds} or \emph{json} file.
 \describe{
 \item{\code{file}}{A \emph{json} or \emph{rds} file as obtained by the MassSpecData
 method \code{save()}.}
+
+\item{\code{replace}}{Logical. When \code{TRUE}, existing settings are replaced by
+the new settings with the same call name.}
 }
 \if{html}{\out{</div>}}
 }
@@ -4148,6 +4795,26 @@ Imports feature groups from a \emph{rds} or \emph{json} file.
 \describe{
 \item{\code{file}}{A \emph{json} or \emph{rds} file as obtained by the MassSpecData
 method \code{save()}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+Invisible.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-MassSpecData-import_all"></a>}}
+\if{latex}{\out{\hypertarget{method-MassSpecData-import_all}{}}}
+\subsection{Method \code{import_all()}}{
+Imports all fields from a \code{MassSpecData} object saved as \emph{json}.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{MassSpecData$import_all(file = NA_character_)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{file}}{A \emph{json} file representing a \code{MassSpecData} object.}
 }
 \if{html}{\out{</div>}}
 }
