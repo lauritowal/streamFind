@@ -190,7 +190,11 @@ function MsProcessing({
             onChange={(event) => setAlgo(event.target.value)}
           >
             <option value="">Select</option>
-            <option value="centwave">centwave</option>
+            <option value="qPeaks">qPeaks</option>
+            <option value="xcms3_centwave">xcms3_centwave</option>
+            <option value="xcms3_matchedfilter">xcms3_matchedfilter</option>
+            <option value="openms">openms</option>
+            <option value="kpic2">kpic2ß</option>
           </select>
           <Button onClick={getFeatures}>Apply!</Button>
         </Box>

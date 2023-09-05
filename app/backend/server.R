@@ -114,12 +114,17 @@ function(req) {
   cache_key <- fileNames$fileNames
   if (file.exists(paste0(cache_key, ".rds"))) {
     cached_result <- readRDS(paste0(cache_key, ".rds"))
-    settings<-get_default_ProcessingSettings(
-      call = "find_features",
-      algorithm = algo
-    )
-    print(settings)
-    updated_cache<-cached_result$find_features(settings=settings)
+    if (algo == "qPeaks") {
+      gfs <- Settings_find_features_qPeaks()
+    } else if (algo == "xcms3_centwave") {
+      gfs <- Settings_find_features_xcms3_centwave()
+    } else if (algo == "xcms3_matchedfilter") {
+      gfs <- Settings_find_features_xcms3_matchedfilter()
+    } else if (algo == "openms") {
+      gfs <- Settings_find_features_openms()
+    } else if (algo == "kpic2") {
+      gfs <- Settings_find_features_kpic2()}
+    updated_cache<-cached_result$find_features(gfs)
     print("applying find features...")
     saveRDS(updated_cache, paste0(cache_key, ".rds"))
     print("updating cache...")
@@ -177,15 +182,17 @@ return(result)}}
 function(req) {
   fileArray <- req$postBody
   fileNames <- fromJSON(fileArray)
-  cache_key <- paste(sort(fileNames), collapse = "_")
+  algo <- fileNames$algorithm
+  cache_key <- fileNames$fileNames
   if (file.exists(paste0(cache_key, ".rds"))) {
     cached_result <- readRDS(paste0(cache_key, ".rds"))
-    settings <- get_default_ProcessingSettings(
-      call = "group_features",
-      algorithm = "peakdensity"
-    )
-    print(settings)
-    updated_cache<-cached_result$group_features(settings)
+    if (algo == "xcms3_peakdensity") {
+      gfs <- Settings_group_features_xcms3_peakdensity()
+    } else if (algo == "xcms3_peakdensity_peakgroups") {
+      gfs <- Settings_group_features_xcms3_peakdensity_peakgroups()
+    }
+    print(gfs)
+    updated_cache<-cached_result$group_features(gfs)
     print(updated_cache)
     print("grouping features...")
     saveRDS(updated_cache, paste0(cache_key, ".rds"))

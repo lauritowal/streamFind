@@ -11,6 +11,7 @@ import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ChangeParameters from "../ChangeParameters";
+import { Button } from "@mui/material";
 
 const handleStyle = { left: 10 };
 
@@ -25,7 +26,9 @@ function GroupFeatures({
   console.log(group_features);
 
   const [groupFeatures, setGroupFeatures] = useState([]);
+  const [algo, setAlgo] = useState("");
   const [openObj, setOpenObj] = useState(false);
+  const [selectAlgo, setSelectAlgo] = useState(false);
   const [openModal, setOpenModal] = useState(false);
 
   const style = {
@@ -56,11 +59,20 @@ function GroupFeatures({
   const handleClose = () => {
     setOpenModal(false);
     setOpenObj(false);
+    setSelectAlgo(false);
+  };
+
+  const openSelectAlgo = () => {
+    setSelectAlgo(true);
   };
 
   const getFeatures = () => {
+    const requestData = {
+      fileNames: group_features,
+      algorithm: algo,
+    };
     axios
-      .post("http://127.0.0.1:8000/group_features", group_features)
+      .post("http://127.0.0.1:8000/group_features", requestData)
       .then((response) => {
         console.log("Getting group features", response);
         console.log(response.data);
@@ -109,7 +121,7 @@ function GroupFeatures({
           in
         </p>
         <PlayIcon
-          onClick={getFeatures}
+          onClick={openSelectAlgo}
           style={{
             color: group_features.length > 0 ? "green" : "red",
             cursor: "pointer",
@@ -131,6 +143,40 @@ function GroupFeatures({
           out
         </p>
       </Handle>
+      <Modal
+        open={selectAlgo}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <IconButton
+            onClick={handleClose}
+            aria-label="close"
+            sx={{
+              position: "absolute",
+              right: 8,
+              top: 8,
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+          <Typography id="modal-modal-title" variant="h9" component="h2">
+            Select Algorithm:
+          </Typography>
+          <select
+            value={algo}
+            onChange={(event) => setAlgo(event.target.value)}
+          >
+            <option value="">Select</option>
+            <option value="xcms3_peakdensity">xcms3_peakdensity</option>
+            <option value="xcms3_peakdenisty_peakgroups">
+              xcms3_peakdensity_peakgroups
+            </option>
+          </select>
+          <Button onClick={getFeatures}>Apply!</Button>
+        </Box>
+      </Modal>
       <Modal
         open={openObj}
         onClose={handleClose}
