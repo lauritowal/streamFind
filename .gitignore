@@ -37,6 +37,6 @@ inst/doc
 # IDE
 .idea
 
-# frontend
+
 node_modules
 public
