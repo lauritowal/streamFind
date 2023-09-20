@@ -4,6 +4,7 @@ library(plumber)
 library(jsonlite)
 library(streamFind)
 library(plotly)
+library(here)
 
 # DEMO TODOS:
 # TODO: Save stuff in sessions --> add to cache.
@@ -29,8 +30,8 @@ cors <- function(req, res) {
 
 #* @get /files_project
 function() {
-    filesx <- list.files(path = "/Users/ammar/Desktop/streamFind", pattern = "\\.mzML$", full.names = TRUE, recursive = FALSE)
-    folders <- list.dirs(path = "/Users/ammar/Desktop/streamFind", full.names = TRUE, recursive = FALSE)
+    filesx <- list.files(path = "/", pattern = "\\.mzML$", full.names = TRUE, recursive = FALSE)
+    folders <- list.dirs(path = "/", full.names = TRUE, recursive = FALSE)
     file_names <- basename(filesx)
     folder_names <- basename(folders)
     filesandfolders <- c(file_names, folder_names)
@@ -41,7 +42,7 @@ function() {
 function(req) {
   folder_name <- req$body$name
   print(folder_name)
-  folder_path <- paste0("/Users/ammar/Desktop/streamFind/", folder_name)
+  folder_path <- paste0("/", folder_name)
   filesx <- list.files(path = folder_path, pattern = "\\.mzML$", full.names = TRUE, recursive = FALSE)
   folders <- list.dirs(path = folder_path, full.names = TRUE, recursive = FALSE)
   file_names <- basename(filesx)
@@ -50,15 +51,15 @@ function(req) {
   return(filesandfolders)
 }
 
-
-
-#* MsData for a given file
+#* MsData for given files by their paths
 #* @post /msdata
 function(req) {
   fileArray <- req$postBody
-  fileNames <- fromJSON(fileArray)
+  filePaths <- fromJSON(fileArray)
+  fileNames <- sapply(filePaths, function(path) basename(path))
   cache_key <- paste(sort(fileNames), collapse = "_")
   print(cache_key)
+  print(filePaths)
   # Check if cached results exist for the given files
   if (file.exists(paste0(cache_key, ".rds"))) {
     # If cached results exist, load and return them
@@ -66,14 +67,10 @@ function(req) {
     print("loading from cache...")
     return(cache_key)
   } else {
-  folderPath <- "/Users/ammar/Desktop/streamFind/app/backend/sample mzml"
-  filesInFolder <- list.files(folderPath, full.names = TRUE)
-  matchingFiles <- file.path(folderPath, fileNames)
-  matchingFiles <- matchingFiles[matchingFiles %in% filesInFolder]
-  ms <- streamFind::MassSpecData$new(files=matchingFiles)
-  saveRDS(ms, paste0(cache_key, ".rds"))
-  print("saving cache...")
-  return(cache_key)
+    ms <- streamFind::MassSpecData$new(files = filePaths)
+    saveRDS(ms, paste0(cache_key, ".rds"))
+    print("saving cache...")
+    return(cache_key)
   }
 }
 
@@ -142,15 +139,15 @@ function(req) {
   datajson <- fromJSON(data)
   params<-datajson$parameters
   cache_key<-datajson$msData
-  print(cache_key)
+  type<-datajson$data_type
   settings <- list(
     call = "find_features",
     algorithm = "xcms3",
     parameters = xcms::CentWaveParam(
       ppm = as.numeric(params$ppm),
-      peakwidth = c(5, 40),
+      peakwidth = c(as.numeric(params$minpeakwidth),as.numeric(params$maxpeakwidth)),
       snthresh = as.numeric(params$snthresh),
-      prefilter = c(5, 1500),
+      prefilter = c(as.numeric(params$minprefilter),as.numeric(params$maxprefilter)),
       mzCenterFun = as.character(params$mzCenterFun)),
       integrate = as.numeric(params$integrate),
       mzdiff = as.numeric(params$mzdiff),
@@ -164,15 +161,22 @@ function(req) {
     ))
   print(settings)
   if (file.exists(paste0(cache_key, ".rds"))) {
+    if(type == "find_features"){
     cached_result <- readRDS(paste0(cache_key, ".rds"))
     updated_cache<-cached_result$find_features(settings)
     print("applying find features...")
     saveRDS(updated_cache, paste0(cache_key, ".rds"))
-    print("updating cache...")
+    print("updating cache...")}
+    else if(type == "group_features"){
+      cached_result <- readRDS(paste0(cache_key, ".rds"))
+      updated_cache<-cached_result$group_features(settings)
+      print("applying group features...")
+      saveRDS(updated_cache, paste0(cache_key, ".rds"))
+      print("updating cache...")}
     return(cache_key)
   } else {
     result <- list(
-      error = "File not found!",
+      error = "File not found!"
     )
 return(result)}}
 

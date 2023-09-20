@@ -6,11 +6,12 @@ import HomeIcon from "@mui/icons-material/Home";
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import { Button, colors } from "@mui/material";
 
-const SelectMzml = ({ onFolderSelect }) => {
+const SelectMzml = ({ onFolderSelect, onfileName }) => {
   const [folders, setFolders] = useState([]);
   const [selectedFolder, setSelectedFolder] = useState("");
   const [previousFolders, setPreviousFolders] = useState([]);
   const [selectedFiles, setSelectedFiles] = useState([]);
+  const [fileName, setfileName] = useState([]);
 
   useEffect(() => {
     axios
@@ -26,6 +27,7 @@ const SelectMzml = ({ onFolderSelect }) => {
 
   const handleSendFiles = () => {
     onFolderSelect(selectedFiles);
+    onfileName(fileName);
   };
   const handleDiscard = () => {
     setSelectedFiles([]);
@@ -33,8 +35,10 @@ const SelectMzml = ({ onFolderSelect }) => {
 
   const handleFolderClick = (item) => {
     if (item.endsWith(".mzML")) {
-      const fileName = item.split("/").pop();
-      setSelectedFiles((prevSelectedFiles) => [...prevSelectedFiles, fileName]);
+      const fullPath = selectedFolder + "/" + item;
+      setfileName(item.split("/").pop());
+      setfileName((prevfileName) => [...prevfileName, fileName]);
+      setSelectedFiles((prevSelectedFiles) => [...prevSelectedFiles, fullPath]);
     } else {
       setSelectedFolder(selectedFolder + "/" + item);
       axios
@@ -107,9 +111,7 @@ const SelectMzml = ({ onFolderSelect }) => {
         ))}
       </div>
       <div style={{ position: "absolute", top: 530, left: 50 }}>
-        {selectedFiles.map((item) => (
-          <li>{item}</li>
-        ))}
+        {fileName.length > 0 && <li>{fileName}</li>}
       </div>
       <div style={{ position: "absolute", top: 625 }}>
         {selectedFiles.length > 0 && (

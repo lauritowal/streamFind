@@ -20,6 +20,7 @@ const MsAnalysis = ({
 }) => {
   const [selectedFiles, setSelectedFiles] = useState("");
   const [stepName, setStepName] = useState("");
+  const [fileNames, setfileNames] = useState("");
 
   console.log(id);
   console.log(edges);
@@ -60,6 +61,9 @@ const MsAnalysis = ({
 
   const handleFolderSelect = (file) => {
     setSelectedFiles(file);
+  };
+  const handlefileName = (file) => {
+    setfileNames(file);
   };
 
   useEffect(() => {
@@ -131,7 +135,7 @@ const MsAnalysis = ({
             <Button onClick={openChild}>See Files</Button>
             {selectedFiles && (
               <div style={{ position: "absolute", top: 90 }}>
-                <p>Selected Files: {selectedFiles}</p>
+                <p>Selected Files: {fileNames}</p>
               </div>
             )}
           </Box>
@@ -157,7 +161,10 @@ const MsAnalysis = ({
               >
                 <CloseIcon />
               </IconButton>
-              <SelectMzml onFolderSelect={handleFolderSelect} />
+              <SelectMzml
+                onFolderSelect={handleFolderSelect}
+                onfileName={handlefileName}
+              />
             </Box>
             {selectedFiles && (
               <div>

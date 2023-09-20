@@ -210,7 +210,10 @@ function GroupFeatures({
         aria-describedby="modal-modal-description"
       >
         <Box sx={style1}>
-          <ChangeParameters handleClose={handleClose} />
+          <ChangeParameters
+            handleClose={handleClose}
+            group_features={groupFeatures}
+          />
         </Box>
       </Modal>
     </div>
