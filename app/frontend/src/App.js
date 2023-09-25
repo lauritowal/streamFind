@@ -17,8 +17,8 @@ import MsProcessing from "./Components/NodeTypes/MsProcessing";
 import { Button } from "@mui/material";
 import GroupFeatures from "./Components/NodeTypes/GroupFeatures";
 
-const initialNodes = [];
 const flowKey = "example-flow";
+const initialNodes = [];
 const nodeTypes = {
   MsDataNode: MsData,
   MsAnalysisNode: MsAnalysis,
@@ -122,10 +122,9 @@ const App = () => {
     }
   }, [reactFlowInstance]);
 
-  const onRestore = useCallback(() => {
+  useEffect(() => {
     const restoreFlow = async () => {
       const flow = JSON.parse(localStorage.getItem(flowKey));
-      console.log(flow);
       if (flow) {
         const { x = 0, y = 0, zoom = 1 } = flow.viewport;
         setNodes(flow.nodes || []);
@@ -135,6 +134,16 @@ const App = () => {
     };
 
     restoreFlow();
+  }, [setNodes, setViewport]);
+
+  const onReset = useCallback(() => {
+    const resetFlow = async () => {
+      setNodes([]);
+      setEdges([]);
+      setViewport({});
+    };
+
+    resetFlow();
   }, [setNodes, setViewport]);
 
   return (
@@ -157,7 +166,7 @@ const App = () => {
         </div>
         <Controls position="bottom-right">
           <Button onClick={onSave}>save</Button>
-          <Button onClick={onRestore}>restore</Button>
+          <Button onClick={onReset}>reset</Button>
         </Controls>
       </ReactFlowProvider>
       <Sidebar />

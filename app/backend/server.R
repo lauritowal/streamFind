@@ -4,7 +4,7 @@ library(plumber)
 library(jsonlite)
 library(streamFind)
 library(plotly)
-library(here)
+library(rsconnect)
 
 # DEMO TODOS:
 # TODO: Save stuff in sessions --> add to cache.
@@ -141,18 +141,22 @@ function(req) {
   cache_key<-datajson$msData
   type<-datajson$data_type
   settings <- list(
-    call = "find_features",
+    if (type=="find_features"){
+      call = "find_features"}
+    else{
+      call = "group_features"
+    },
     algorithm = "xcms3",
     parameters = xcms::CentWaveParam(
       ppm = as.numeric(params$ppm),
       peakwidth = c(as.numeric(params$minpeakwidth),as.numeric(params$maxpeakwidth)),
       snthresh = as.numeric(params$snthresh),
       prefilter = c(as.numeric(params$minprefilter),as.numeric(params$maxprefilter)),
-      mzCenterFun = as.character(params$mzCenterFun)),
+      mzCenterFun = as.character(params$mzCenterFun),
       integrate = as.numeric(params$integrate),
       mzdiff = as.numeric(params$mzdiff),
-      fitgauss = as.character(params$fitgauss),
-      noise = as.numeric(params$noise,
+      fitgauss = as.logical(params$fitgauss),
+      noise = as.numeric(params$noise),
       verboseColumns = as.logical(params$verboseColumns),
       roiList = list(),
       firstBaselineCheck = as.logical(params$firstBaselineCheck),

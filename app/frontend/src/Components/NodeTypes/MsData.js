@@ -122,7 +122,7 @@ function MsData({
         />
       </div>
       <Handle
-        type="source"
+        type="target"
         style={{ background: "green" }}
         position={Position.Left}
         isConnectable={isConnectable}
