@@ -101,6 +101,31 @@ function(req) {
     )
  return(result)}}
 
+#* Getting details for Mzml file
+#* @post /mzmldetails
+function(req) {
+  fileArray <- req$postBody
+  receivedData <- fromJSON(fileArray)
+  fileName <- receivedData$fileName
+  cache_key <- receivedData$msdata
+  if (file.exists(paste0(cache_key, ".rds"))) {
+    cached_result <- readRDS(paste0(cache_key, ".rds"))
+    analyses <- cached_result$get_analyses(fileName)
+    print(analyses)
+    attributes <- list(
+      name=analyses[[fileName]][["name"]]
+    )
+    analysesjson <- jsonlite::serializeJSON(attributes)
+    result <- list(
+      analysesjson=analysesjson
+    )
+    return(result)
+  } else {
+    result <- list(
+      error = "File not found!"
+    )
+    return(result)}}
+
 
 #* Applying find_features on MsData for a given file
 #* @post /find_features
@@ -128,7 +153,7 @@ function(req) {
     return(cache_key)
   } else {
     result <- list(
-      error = "File not found!",
+      error = "File not found!"
     )
     return(result)}}
 

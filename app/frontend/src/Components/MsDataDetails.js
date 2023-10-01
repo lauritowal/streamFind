@@ -7,6 +7,7 @@ import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import Plot from "react-plotly.js";
+import MzmlFileDetails from "./MzmlFileDetails";
 
 function MsDataDetails({ msDataObj, handleClose }) {
   const [stepName, setStepName] = useState("");
@@ -14,6 +15,13 @@ function MsDataDetails({ msDataObj, handleClose }) {
   const [analyses_number, setAnalyses_number] = useState([]);
   const [analyses, setAnalyses] = useState([]);
   const [plot, setPlot] = useState([]);
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedFileName, setSelectedFileName] = useState("");
+
+  const handleOpen = (fileName) => {
+    setSelectedFileName(fileName);
+    setOpenModal(true);
+  };
 
   const style = {
     position: "absolute",
@@ -22,6 +30,19 @@ function MsDataDetails({ msDataObj, handleClose }) {
     transform: "translate(-50%, -50%)",
     width: 1500,
     height: 700,
+    bgcolor: "white",
+    border: "2px solid white",
+    borderRadius: "25px",
+    p: 5,
+  };
+
+  const style2 = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 350,
+    height: 50,
     bgcolor: "white",
     border: "2px solid white",
     borderRadius: "25px",
@@ -74,7 +95,11 @@ function MsDataDetails({ msDataObj, handleClose }) {
         </thead>
         <tbody>
           {overview.map((item) => (
-            <tr key={item.id}>
+            <tr
+              key={item.id}
+              style={{ cursor: "pointer" }}
+              onClick={() => handleOpen(item.analysis)}
+            >
               <td>{item.file}</td>
               <td>{item.analysis}</td>
               <td>{item.replicate}</td>
@@ -121,6 +146,20 @@ function MsDataDetails({ msDataObj, handleClose }) {
       >
         Save msData
       </Button>
+      <Modal
+        open={openModal}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <MzmlFileDetails
+            selectedFileName={selectedFileName}
+            msDataObj={msDataObj}
+            handleClose={handleClose}
+          />
+        </Box>
+      </Modal>
     </div>
   );
 }
