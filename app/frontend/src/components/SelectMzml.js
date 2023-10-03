@@ -11,7 +11,8 @@ const SelectMzml = ({ onFolderSelect, onfileName }) => {
   const [selectedFolder, setSelectedFolder] = useState("");
   const [previousFolders, setPreviousFolders] = useState([]);
   const [selectedFiles, setSelectedFiles] = useState([]);
-  const [fileName, setfileName] = useState([]);
+  const [fileNames, setFileNames] = useState([]);
+  const [clickedFiles, setClickedFiles] = useState([]);
 
   useEffect(() => {
     axios
@@ -27,18 +28,27 @@ const SelectMzml = ({ onFolderSelect, onfileName }) => {
 
   const handleSendFiles = () => {
     onFolderSelect(selectedFiles);
-    onfileName(fileName);
+    onfileName(fileNames);
   };
+
   const handleDiscard = () => {
     setSelectedFiles([]);
+    setFileNames([]);
+    setClickedFiles([]);
   };
 
   const handleFolderClick = (item) => {
     if (item.endsWith(".mzML")) {
       const fullPath = selectedFolder + "/" + item;
-      setfileName(item.split("/").pop());
-      setfileName((prevfileName) => [...prevfileName, fileName]);
       setSelectedFiles((prevSelectedFiles) => [...prevSelectedFiles, fullPath]);
+      setFileNames((prevFileNames) => [...prevFileNames, item]);
+
+      // Toggle background color only for .mzML files
+      setClickedFiles((prevClickedFiles) =>
+        prevClickedFiles.includes(item)
+          ? prevClickedFiles.filter((file) => file !== item)
+          : [...prevClickedFiles, item]
+      );
     } else {
       setSelectedFolder(selectedFolder + "/" + item);
       axios
@@ -92,6 +102,12 @@ const SelectMzml = ({ onFolderSelect, onfileName }) => {
             key={index}
             style={{
               cursor: "pointer",
+              borderRadius: "25px",
+              padding: "3px",
+              backgroundColor:
+                item.endsWith(".mzML") && clickedFiles.includes(item)
+                  ? "grey"
+                  : "transparent",
             }}
             onClick={() => handleFolderClick(item)}
           >
@@ -110,15 +126,16 @@ const SelectMzml = ({ onFolderSelect, onfileName }) => {
           </li>
         ))}
       </div>
-      <div style={{ position: "absolute", top: 530, left: 50 }}>
-        {fileName.length > 0 && <li>{fileName}</li>}
+      <div style={{ position: "absolute", top: 630, left: 50 }}>
+        {fileNames.length > 0 &&
+          fileNames.map((item, index) => <li key={index}>{item}</li>)}
       </div>
-      <div style={{ position: "absolute", top: 625 }}>
+      <div style={{ position: "absolute", top: 725 }}>
         {selectedFiles.length > 0 && (
           <Button onClick={handleSendFiles}>Select</Button>
         )}
       </div>
-      <div style={{ position: "absolute", top: 625, left: 150 }}>
+      <div style={{ position: "absolute", top: 725, left: 150 }}>
         {selectedFiles.length > 0 && (
           <Button onClick={handleDiscard}>Discard Selection</Button>
         )}

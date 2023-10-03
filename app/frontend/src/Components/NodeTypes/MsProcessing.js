@@ -11,7 +11,10 @@ import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ChangeParameters from "../ChangeParameters";
-import { Button } from "@mui/material";
+import { Button, MenuItem } from "@mui/material";
+import InputLabel from "@mui/material/InputLabel";
+import FormControl from "@mui/material/FormControl";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
 
 const handleStyle = { left: 10 };
 
@@ -38,7 +41,7 @@ function MsProcessing({
     left: "50%",
     transform: "translate(-50%, -50%)",
     width: 350,
-    height: 50,
+    height: 100,
     bgcolor: "white",
     border: "2px solid white",
     borderRadius: "25px",
@@ -51,6 +54,18 @@ function MsProcessing({
     transform: "translate(-50%, -50%)",
     width: 350,
     height: 400,
+    bgcolor: "white",
+    border: "2px solid white",
+    borderRadius: "25px",
+    p: 5,
+  };
+  const style2 = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 350,
+    height: 800,
     bgcolor: "white",
     border: "2px solid white",
     borderRadius: "25px",
@@ -130,29 +145,17 @@ function MsProcessing({
       <p style={{ fontSize: "7px", position: "absolute", top: 45, left: -9 }}>
         find_features
       </p>
-      <Handle
-        type="target"
-        style={{ background: "white" }}
-        position={Position.Top}
-        isConnectable={isConnectable}
-      >
-        <p
-          style={{ fontSize: "9px", position: "absolute", top: -12, left: -9 }}
-        >
-          in
-        </p>
-        <PlayIcon
-          onClick={openSelectAlgo}
-          style={{
-            color: find_features.length > 0 ? "green" : "red",
-            cursor: "pointer",
-            fontSize: "10px",
-            position: "absolute",
-            top: -2,
-            left: -2,
-          }}
-        />
-      </Handle>
+      <PlayIcon
+        onClick={openSelectAlgo}
+        style={{
+          color: find_features.length > 0 ? "green" : "red",
+          cursor: "pointer",
+          fontSize: "10px",
+          position: "absolute",
+          top: -10,
+          left: 19,
+        }}
+      />
       <Handle
         type="source"
         style={{ background: "blue" }}
@@ -162,6 +165,18 @@ function MsProcessing({
       >
         <p style={{ fontSize: "9px", position: "absolute", top: -12, left: 8 }}>
           out
+        </p>
+      </Handle>
+      <Handle
+        type="target"
+        style={{ background: "green" }}
+        position={Position.Left}
+        isConnectable={isConnectable}
+      >
+        <p
+          style={{ fontSize: "9px", position: "absolute", top: -12, left: -9 }}
+        >
+          in
         </p>
       </Handle>
       <Modal
@@ -185,17 +200,23 @@ function MsProcessing({
           <Typography id="modal-modal-title" variant="h9" component="h2">
             Select Algorithm:
           </Typography>
-          <select
-            value={algo}
-            onChange={(event) => setAlgo(event.target.value)}
-          >
-            <option value="">Select</option>
-            <option value="qPeaks">qPeaks</option>
-            <option value="xcms3_centwave">xcms3_centwave</option>
-            <option value="xcms3_matchedfilter">xcms3_matchedfilter</option>
-            <option value="openms">openms</option>
-            <option value="kpic2">kpic2ß</option>
-          </select>
+          <FormControl sx={{ m: 1, minWidth: 150 }}>
+            <InputLabel id="demo-simple-select-label">Select</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={algo}
+              onChange={(event) => setAlgo(event.target.value)}
+            >
+              <MenuItem value="qPeaks">qPeaks</MenuItem>
+              <MenuItem value="xcms3_centwave">xcms3_centwave</MenuItem>
+              <MenuItem value="xcms3_matchedfilter">
+                xcms3_matchedfilter
+              </MenuItem>
+              <MenuItem value="openms">openms</MenuItem>
+              <MenuItem value="kpic2">kpic2ß</MenuItem>
+            </Select>
+          </FormControl>
           <Button onClick={getFeatures}>Apply!</Button>
         </Box>
       </Modal>
@@ -231,7 +252,7 @@ function MsProcessing({
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={style1}>
+        <Box sx={style2}>
           <ChangeParameters
             find_features={findFeatures}
             handleClose={handleClose}

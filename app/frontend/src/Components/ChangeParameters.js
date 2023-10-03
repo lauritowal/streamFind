@@ -3,6 +3,8 @@ import axios from "axios";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
+import { FormControl } from "@mui/material";
+import { Button, Input } from "@mui/material";
 
 function ChangeParameters({ find_features, handleClose, group_features }) {
   const initialFormState = {
@@ -73,11 +75,11 @@ function ChangeParameters({ find_features, handleClose, group_features }) {
       <Typography variant="h6" component="h2">
         ChangeParameters
       </Typography>
-      <form onSubmit={handleSubmit}>
+      <FormControl onSubmit={handleSubmit}>
         {Object.keys(initialFormState).map((paramName) => (
           <div key={paramName}>
             <label htmlFor={paramName}>{paramName}</label>
-            <input
+            <Input
               type="text"
               id={paramName}
               value={formState[paramName]}
@@ -85,8 +87,10 @@ function ChangeParameters({ find_features, handleClose, group_features }) {
             />
           </div>
         ))}
-        <button type="submit">Submit</button>
-      </form>
+        <Button onClick={handleSubmit} type="submit">
+          Submit
+        </Button>
+      </FormControl>
     </div>
   );
 }

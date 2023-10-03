@@ -20,7 +20,7 @@ const MsAnalysis = ({
 }) => {
   const [selectedFiles, setSelectedFiles] = useState("");
   const [stepName, setStepName] = useState("");
-  const [fileNames, setfileNames] = useState("");
+  const [fileNames, setfileNames] = useState([]);
 
   console.log(id);
   console.log(edges);
@@ -40,7 +40,7 @@ const MsAnalysis = ({
     left: "50%",
     transform: "translate(-50%, -50%)",
     width: 500,
-    height: 600,
+    height: 800,
     bgcolor: "white",
     border: "2px solid white",
     borderRadius: "25px",
@@ -135,7 +135,12 @@ const MsAnalysis = ({
             <Button onClick={openChild}>See Files</Button>
             {selectedFiles && (
               <div style={{ position: "absolute", top: 90 }}>
-                <p>Selected Files: {fileNames}</p>
+                <h3>Selected Files:</h3>
+                <h5>
+                  {fileNames.map((item, index) => (
+                    <li key={index}>{item}</li>
+                  ))}
+                </h5>
               </div>
             )}
           </Box>
@@ -166,11 +171,6 @@ const MsAnalysis = ({
                 onfileName={handlefileName}
               />
             </Box>
-            {selectedFiles && (
-              <div>
-                <h4>Selected:{selectedFiles}</h4>
-              </div>
-            )}
             {selectedFiles && (
               <div style={{ position: "absolute", top: 399, right: -40 }}>
                 <Button onClick={handleOpen}>Confirm</Button>
