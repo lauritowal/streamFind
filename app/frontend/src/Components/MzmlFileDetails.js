@@ -8,7 +8,7 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import Plot from "react-plotly.js";
 
-function MzmlFileDetails({ selectedFileName, handleClose, msDataObj }) {
+function MzmlFileDetails({ selectedFileName, msDataObj, handleClose }) {
   const [analyses, setAnalyses] = useState([]);
 
   const style = {
@@ -40,6 +40,7 @@ function MzmlFileDetails({ selectedFileName, handleClose, msDataObj }) {
         console.error("Error sending files:", error);
       });
   }, [msDataObj, selectedFileName]);
+  const indices = [0, 1, 2, 4, 5, 7, 8, 9, 15, 21, 14, 23];
 
   return (
     <div>
@@ -62,142 +63,23 @@ function MzmlFileDetails({ selectedFileName, handleClose, msDataObj }) {
         variant="h9"
         component="h2"
       ></Typography>
-      <div style={{ display: "flex" }}>
-        <p style={{ marginRight: "10px" }}>
-          {analyses &&
-            analyses.value &&
-            analyses.value[0].attributes.names.value[0]}
-          :
-        </p>
-        <p>
-          {analyses && analyses.value && analyses.value[0].value[0].value[0]}
-        </p>
-      </div>
-      <div style={{ display: "flex" }}>
-        <p style={{ marginRight: "10px" }}>
-          {analyses &&
-            analyses.value &&
-            analyses.value[0].attributes.names.value[1]}
-          :
-        </p>
-        <p>
-          {analyses && analyses.value && analyses.value[0].value[1].value[0]}
-        </p>
-      </div>
-      <div style={{ display: "flex" }}>
-        <p style={{ marginRight: "10px" }}>
-          {analyses &&
-            analyses.value &&
-            analyses.value[0].attributes.names.value[2]}
-          :
-        </p>
-        <p>
-          {analyses && analyses.value && analyses.value[0].value[2].value[0]}
-        </p>
-      </div>
-      <div style={{ display: "flex" }}>
-        <p style={{ marginRight: "10px" }}>
-          {analyses &&
-            analyses.value &&
-            analyses.value[0].attributes.names.value[4]}
-          :
-        </p>
-        <p>
-          {analyses && analyses.value && analyses.value[0].value[4].value[0]}
-        </p>
-      </div>
-      <div style={{ display: "flex" }}>
-        <p style={{ marginRight: "10px" }}>
-          {analyses &&
-            analyses.value &&
-            analyses.value[0].attributes.names.value[5]}
-          :
-        </p>
-        <p>
-          {analyses && analyses.value && analyses.value[0].value[5].value[0]}
-        </p>
-      </div>
-      <div style={{ display: "flex" }}>
-        <p style={{ marginRight: "10px" }}>
-          {analyses &&
-            analyses.value &&
-            analyses.value[0].attributes.names.value[7]}
-          :
-        </p>
-        <p>
-          {analyses && analyses.value && analyses.value[0].value[7].value[0]}
-        </p>
-      </div>
-      <div style={{ display: "flex" }}>
-        <p style={{ marginRight: "10px" }}>
-          {analyses &&
-            analyses.value &&
-            analyses.value[0].attributes.names.value[8]}
-          :
-        </p>
-        <p>
-          {analyses && analyses.value && analyses.value[0].value[8].value[0]}
-        </p>
-      </div>
-      <div style={{ display: "flex" }}>
-        <p style={{ marginRight: "10px" }}>
-          {analyses &&
-            analyses.value &&
-            analyses.value[0].attributes.names.value[9]}
-          :
-        </p>
-        <p>
-          {analyses && analyses.value && analyses.value[0].value[9].value[0]}
-        </p>
-      </div>
-      <div style={{ display: "flex" }}>
-        <p style={{ marginRight: "10px" }}>
-          {analyses &&
-            analyses.value &&
-            analyses.value[0].attributes.names.value[15]}
-          :
-        </p>
-        <p>
-          {analyses &&
-            analyses.value &&
-            analyses.value[0].value[15].value[0].toString()}
-        </p>
-      </div>
-      <div style={{ display: "flex" }}>
-        <p style={{ marginRight: "10px" }}>
-          {analyses &&
-            analyses.value &&
-            analyses.value[0].attributes.names.value[21]}
-          :
-        </p>
-        <p>
-          {analyses && analyses.value && analyses.value[0].value[21].value[0]}
-        </p>
-      </div>
-      <div style={{ display: "flex" }}>
-        <p style={{ marginRight: "10px" }}>
-          {analyses &&
-            analyses.value &&
-            analyses.value[0].attributes.names.value[14]}
-          :
-        </p>
-        <p>
-          {analyses && analyses.value && analyses.value[0].value[14].value[0]}
-        </p>
-      </div>
-      <div style={{ display: "flex" }}>
-        <p style={{ marginRight: "10px" }}>
-          {analyses &&
-            analyses.value &&
-            analyses.value[0].attributes.names.value[23]}
-          :
-        </p>
-        <p>
-          {analyses &&
-            analyses.value &&
-            analyses.value[0]?.value[23]?.value[0]?.value.length}
-        </p>
-      </div>
+      <table style={{ width: "50%" }}>
+        <tbody>
+          {indices.map((index) => (
+            <tr key={index}>
+              <td>{analyses?.value?.[0]?.attributes?.names?.value?.[index]}</td>
+              <td>
+                {index === 23
+                  ? analyses?.value?.[0]?.value?.[index]?.value?.[0]?.value
+                      ?.length
+                  : analyses?.value?.[0]?.value?.[
+                      index
+                    ]?.value?.[0]?.toString()}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }

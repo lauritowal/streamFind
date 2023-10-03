@@ -110,30 +110,8 @@ function MsDataDetails({ msDataObj, handleClose }) {
           ))}
         </tbody>
       </table>
-      <Typography
-        style={{ position: "absolute", top: 40, left: 1150 }}
-        variant="h9"
-        component="h2"
-      >
-        Settings
-      </Typography>
-      <Typography
-        style={{ position: "absolute", top: 200, left: 1150 }}
-        variant="h9"
-        component="h2"
-      >
-        Summary
-        <div style={{ fontSize: "15px" }}>
-          <p>Number of Analyses: {analyses_number}</p>
-          <p>Number of Metadata: which function?</p>
-          <p>Spectra loaded: which function?</p>
-          <p>Chromatograms loaded: which function?</p>
-          <p>Total number of Peaks: which function?</p>
-          <p>Number of features: {overview.map((item) => item.features)}</p>
-        </div>
-      </Typography>
       <Plot
-        style={{ position: "absolute", top: 300, left: 100 }}
+        style={{ position: "absolute", top: 340, left: 100 }}
         data={plot.data}
         layout={plot.layout}
       />

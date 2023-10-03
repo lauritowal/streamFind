@@ -46,7 +46,7 @@ function MsData({
     left: "50%",
     transform: "translate(-50%, -50%)",
     width: 1500,
-    height: 700,
+    height: 800,
     bgcolor: "white",
     border: "2px solid white",
     borderRadius: "25px",

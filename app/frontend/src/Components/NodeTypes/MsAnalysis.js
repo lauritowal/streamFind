@@ -34,6 +34,9 @@ const MsAnalysis = ({
   const handleClose = () => {
     setStepName("");
   };
+  const handleCloseChild = () => {
+    setStepName("openModal");
+  };
   const style = {
     position: "absolute",
     top: "50%",
@@ -148,7 +151,6 @@ const MsAnalysis = ({
 
         <Modal
           open={stepName === "childOpen"}
-          onClose={handleOpen}
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
@@ -169,13 +171,9 @@ const MsAnalysis = ({
               <SelectMzml
                 onFolderSelect={handleFolderSelect}
                 onfileName={handlefileName}
+                handleClose={handleCloseChild}
               />
             </Box>
-            {selectedFiles && (
-              <div style={{ position: "absolute", top: 399, right: -40 }}>
-                <Button onClick={handleOpen}>Confirm</Button>
-              </div>
-            )}
           </Box>
         </Modal>
       </div>

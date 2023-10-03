@@ -3,7 +3,7 @@ import axios from "axios";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
-import { FormControl } from "@mui/material";
+import { FormControl, Grid } from "@mui/material";
 import { Button, Input } from "@mui/material";
 
 function ChangeParameters({ find_features, handleClose, group_features }) {
@@ -72,22 +72,35 @@ function ChangeParameters({ find_features, handleClose, group_features }) {
       >
         <CloseIcon />
       </IconButton>
-      <Typography variant="h6" component="h2">
-        ChangeParameters
+      <Typography style={{ paddingBottom: "10px" }} variant="h6" component="h2">
+        Parameters
       </Typography>
       <FormControl onSubmit={handleSubmit}>
         {Object.keys(initialFormState).map((paramName) => (
-          <div key={paramName}>
-            <label htmlFor={paramName}>{paramName}</label>
+          <div
+            key={paramName}
+            style={{ display: "flex", alignItems: "center" }}
+          >
+            <label
+              htmlFor={paramName}
+              style={{ flex: "1", textAlign: "right", paddingRight: "10px" }}
+            >
+              {paramName}
+            </label>
             <Input
               type="text"
               id={paramName}
+              inputProps={{ min: 0, style: { flex: "2", textAlign: "center" } }}
               value={formState[paramName]}
               onChange={(e) => handleChange(paramName, e.target.value)}
             />
           </div>
         ))}
-        <Button onClick={handleSubmit} type="submit">
+        <Button
+          style={{ paddingTop: "30px" }}
+          onClick={handleSubmit}
+          type="submit"
+        >
           Submit
         </Button>
       </FormControl>

@@ -6,7 +6,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import { Button, colors } from "@mui/material";
 
-const SelectMzml = ({ onFolderSelect, onfileName }) => {
+const SelectMzml = ({ onFolderSelect, onfileName, handleClose }) => {
   const [folders, setFolders] = useState([]);
   const [selectedFolder, setSelectedFolder] = useState("");
   const [previousFolders, setPreviousFolders] = useState([]);
@@ -29,6 +29,7 @@ const SelectMzml = ({ onFolderSelect, onfileName }) => {
   const handleSendFiles = () => {
     onFolderSelect(selectedFiles);
     onfileName(fileNames);
+    handleClose();
   };
 
   const handleDiscard = () => {
@@ -106,7 +107,7 @@ const SelectMzml = ({ onFolderSelect, onfileName }) => {
               padding: "3px",
               backgroundColor:
                 item.endsWith(".mzML") && clickedFiles.includes(item)
-                  ? "grey"
+                  ? "#61dafb"
                   : "transparent",
             }}
             onClick={() => handleFolderClick(item)}
