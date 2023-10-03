@@ -112,10 +112,7 @@ function(req) {
     cached_result <- readRDS(paste0(cache_key, ".rds"))
     analyses <- cached_result$get_analyses(fileName)
     print(analyses)
-    attributes <- list(
-      name=analyses[[fileName]][["name"]]
-    )
-    analysesjson <- jsonlite::serializeJSON(attributes)
+    analysesjson <- jsonlite::serializeJSON(analyses)
     result <- list(
       analysesjson=analysesjson
     )
